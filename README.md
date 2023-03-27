@@ -17,7 +17,7 @@ tar -xzf
 - You will see Hello World! on your terminal. 
 
 # How to contribute
-Follow this project board to know the latest status of the project: [https://github.com/orgs/cis3296s23/projects/64]([https://github.com/orgs/cis3296s23/projects/64])  
+Follow this project board to know the latest status of the project: [Project Board](https://github.com/orgs/cis3296s23/projects/64)  
 
 ### How to build
 - Use this github repository: ... 
