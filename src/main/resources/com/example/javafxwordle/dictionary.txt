@@ -4629,6 +4629,7 @@ kapas
 kaphs
 kapok
 kapow
+kappa
 kapus
 kaput
 karas
