@@ -4368,6 +4368,7 @@ inwit
 iodic
 iodid
 iodin
+ionic
 iotas
 ippon
 irade
@@ -10330,6 +10331,7 @@ works
 worms
 wormy
 worts
+woven
 wowed
 wowee
 woxen
