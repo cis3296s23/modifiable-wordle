@@ -701,6 +701,7 @@ baser
 bases
 basho
 basij
+basil
 basks
 bason
 basse
