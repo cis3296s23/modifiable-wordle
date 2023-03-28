@@ -1,5 +1,5 @@
-# Project Name
-Put here a short paragraph describing your project. 
+# Modifiable Wordle
+A project created using JavaFX that recreates the popular game Wordle while adding fun new features to keep the game fresh.
 Adding an screenshot or a mockup of your application in action would be nice.  
 
 ![This is a screenshot.](images.png)
@@ -20,9 +20,9 @@ tar -xzf
 Follow this project board to know the latest status of the project: [Project Board](https://github.com/orgs/cis3296s23/projects/64)  
 
 ### How to build
-- Use this github repository: ... 
-- Specify what branch to use for a more stable release or for cutting edge development.  
-- Use InteliJ 11
-- Specify additional library to download if needed 
-- What file and target to compile and run. 
-- What is expected to happen when the app start. 
+- Visit our GitHub page: https://github.com/cis3296s23/modifiable-wordle
+- main branch will always have the most stable, test and peer-reviewed version of our game
+- Use IntelliJ IDE
+- IntelliJ may suggest a specific installation of Java that includes FX library.
+- Run MainApplication.java (default output is target folder)
+- Modifiable Wordle should start up as it's own window if compliation is successful.
