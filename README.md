@@ -1,8 +1,9 @@
 # Modifiable Wordle
 A project created using JavaFX that recreates the popular game Wordle while adding fun new features to keep the game fresh.
  
-
-![image](https://user-images.githubusercontent.com/61361340/228308751-1f108178-e1cd-4e14-aa67-4c8eb4cacae6.png)
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/61361340/228308751-1f108178-e1cd-4e14-aa67-4c8eb4cacae6.png" />
+</p>
 
 # How to run
 Here are instructions on how to get started with Modifiable Wordle. 
