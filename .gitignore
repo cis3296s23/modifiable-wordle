@@ -1,0 +1,8 @@
+
+target/classes/com/example/javafxwordle/Toast.class
+target/classes/com/example/javafxwordle/HelpWindow.class
+target/classes/com/example/javafxwordle/images/help.png
+target/classes/com/example/javafxwordle/images/icons8-restart-40.png
+*.class
+*.fxml
+*.png

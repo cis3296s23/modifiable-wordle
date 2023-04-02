@@ -27,14 +27,31 @@ public class MainHelper {
     private int CURRENT_COLUMN = 1;
     private final int MAX_COLUMN = 5;
     private final int MAX_ROW = 6;
-    private String winningWord;
-
+    private static String winningWord;
+    //int dupFlag=0;
+    //static HashSet something= new HashMap<>();
+    //Let the key be the index and the value be the number of said letters.
     private MainHelper() {
     }
 
     public static MainHelper getInstance() {
-        if (INSTANCE == null)
+        if (INSTANCE == null){
             INSTANCE = new MainHelper();
+        }
+        //int i= winningWord.length();
+        //test=winningWords;
+        //int count=1;
+        //something.contains(winningWords);
+        /*
+        for(int i=0; i<winningWord.length(); i++){
+            for(int j=0; j<winningWord.length(); j++){
+                if((winningWord.charAt(i)== winningWord.charAt(j)) && (i!=j) ){
+                    count++;
+                }
+
+            }
+        }
+*/
         return INSTANCE;
     }
 
@@ -140,21 +157,92 @@ public class MainHelper {
     }
 
     private void updateRowColors(GridPane gridPane, int searchRow) {
+        //int[][] flags= new int [2][5];
+        HashMap <String, Integer> checkDups= new HashMap<String, Integer>();
+        HashSet<Integer> skipIndex= new HashSet<Integer>();
+        //for (int i=0; i<winningWord.length(); i++){
+            //flags[0][i]= winningWord.charAt(i);
+        //}
+        int count=1;
+        for(int i=0; i< winningWord.length(); i++){
+            for(int j=0; j<winningWord.length(); j++){
+                if((i!=j) && (winningWord.charAt(i)== winningWord.charAt(j))){
+                    count++;
+                }
+            }
+            if(!checkDups.containsKey((String.valueOf(winningWord.charAt(i))).toLowerCase())){
+                checkDups.put(String.valueOf(winningWord.charAt(i)).toLowerCase(), count);
+            }
+            count=1;
+        }
+        for (int i = 1; i <= MAX_COLUMN; i++) {
+            Label label = getLabel(gridPane, searchRow, i);
+            //String styleClass;
+            if (label != null) {
+                String currentCharacter = String.valueOf(label.getText().charAt(0)).toLowerCase();
+                if (String.valueOf(winningWord.charAt(i - 1)).toLowerCase().equals(currentCharacter)) {
+                    checkDups.replace(String.valueOf(winningWord.charAt(i - 1)).toLowerCase(), 
+                                (checkDups.get(String.valueOf(winningWord.charAt(i - 1)).toLowerCase())-1));
+                    skipIndex.add(i);
+                    System.out.println(skipIndex);
+                    System.out.println(checkDups);
+                    //styleClass = "correct-letter";
+                    //transit(label, styleClass);
+                //} else if (winningWord.contains(currentCharacter)) {
+                    //styleClass = "present-letter";
+                } //else {
+                    //styleClass = "wrong-letter";
+                //}
+                //transit(label, styleClass);
+                
+            }
+        }
 
         for (int i = 1; i <= MAX_COLUMN; i++) {
+            //System.out.println("This is so dumb\n");
             Label label = getLabel(gridPane, searchRow, i);
             String styleClass;
             if (label != null) {
                 String currentCharacter = String.valueOf(label.getText().charAt(0)).toLowerCase();
-                if (String.valueOf(winningWord.charAt(i - 1)).toLowerCase().equals(currentCharacter)) {
+                //if (String.valueOf(winningWord.charAt(i - 1)).toLowerCase().equals(currentCharacter)) {
+                    //checkDups.replace(String.valueOf(winningWord.charAt(i - 1)).toLowerCase(), 
+                                //(checkDups.get(String.valueOf(winningWord.charAt(i - 1)).toLowerCase())-1));
+                    //skipIndex.add(i);
+                    //styleClass = "correct-letter";
+                    //transit(label, styleClass);
+                //} else if (winningWord.contains(currentCharacter)) {
+                    //styleClass = "present-letter";
+                //} else {
+                    //styleClass = "wrong-letter";
+                //}
+                //transit(label, styleClass);
+                if(skipIndex.contains(i)){
                     styleClass = "correct-letter";
-                } else if (winningWord.contains(currentCharacter)) {
+                    //System.out.println("Skip this index " + i +", since it is in the correct postion");
+                    //System.out.println(skipIndex);
+                    //System.out.println(checkDups);
+                }
+                
+                else if(winningWord.contains(currentCharacter) && 
+                            (checkDups.get(String.valueOf(winningWord.charAt(i - 1)).toLowerCase()) >0)){
+                    checkDups.replace(String.valueOf(winningWord.charAt(i - 1)).toLowerCase(), 
+                                (checkDups.get(String.valueOf(winningWord.charAt(i - 1)).toLowerCase())-1));
                     styleClass = "present-letter";
-                } else {
+                    //styleClass = "wrong-letter";
+                }
+                else{
                     styleClass = "wrong-letter";
                 }
+                //System.out.println(skipIndex);
+                //System.out.println(checkDups);
+                //System.out.println("End of pass "+ i + "\n");
+                transit(label, styleClass);
+            }
+        }
+    }
 
-                FadeTransition firstFadeTransition = new FadeTransition(Duration.millis(300), label);
+    private void transit(Label label, String styleClass ){
+        FadeTransition firstFadeTransition = new FadeTransition(Duration.millis(300), label);
                 firstFadeTransition.setFromValue(1);
                 firstFadeTransition.setToValue(0.2);
                 firstFadeTransition.setOnFinished(e -> {
@@ -167,8 +255,6 @@ public class MainHelper {
                 secondFadeTransition.setToValue(1);
 
                 new SequentialTransition(firstFadeTransition, secondFadeTransition).play();
-            }
-        }
     }
 
     private void updateKeyboardColors(GridPane gridPane, GridPane keyboardRow1, GridPane keyboardRow2, GridPane keyboardRow3) {
