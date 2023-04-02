@@ -160,6 +160,7 @@ public class MainHelper {
         //int[][] flags= new int [2][5];
         HashMap <String, Integer> checkDups= new HashMap<String, Integer>();
         HashSet<Integer> skipIndex= new HashSet<Integer>();
+        HashMap <String, Integer> temp1= new HashMap<String, Integer>();
         //for (int i=0; i<winningWord.length(); i++){
             //flags[0][i]= winningWord.charAt(i);
         //}
@@ -175,17 +176,20 @@ public class MainHelper {
             }
             count=1;
         }
+        System.out.println("The Before: " + checkDups);
         for (int i = 1; i <= MAX_COLUMN; i++) {
             Label label = getLabel(gridPane, searchRow, i);
+            //
+            //temp1.putAll(checkDups);
             //String styleClass;
             if (label != null) {
                 String currentCharacter = String.valueOf(label.getText().charAt(0)).toLowerCase();
                 if (String.valueOf(winningWord.charAt(i - 1)).toLowerCase().equals(currentCharacter)) {
-                    checkDups.replace(String.valueOf(winningWord.charAt(i - 1)).toLowerCase(), 
-                                (checkDups.get(String.valueOf(winningWord.charAt(i - 1)).toLowerCase())-1));
+                    //checkDups.replace(String.valueOf(winningWord.charAt(i - 1)).toLowerCase(), 
+                                //(temp1.get(String.valueOf(winningWord.charAt(i - 1)).toLowerCase())-1);
                     skipIndex.add(i);
                     System.out.println(skipIndex);
-                    System.out.println(checkDups);
+                    //System.out.println(temp1);
                     //styleClass = "correct-letter";
                     //transit(label, styleClass);
                 //} else if (winningWord.contains(currentCharacter)) {
@@ -218,27 +222,42 @@ public class MainHelper {
                 //transit(label, styleClass);
                 if(skipIndex.contains(i)){
                     styleClass = "correct-letter";
+                    checkDups.put(currentCharacter, (checkDups.get(currentCharacter)-1));
                     //System.out.println("Skip this index " + i +", since it is in the correct postion");
                     //System.out.println(skipIndex);
                     //System.out.println(checkDups);
                 }
                 
-                else if(winningWord.contains(currentCharacter) && 
-                            (checkDups.get(String.valueOf(winningWord.charAt(i - 1)).toLowerCase()) >0)){
-                    checkDups.replace(String.valueOf(winningWord.charAt(i - 1)).toLowerCase(), 
-                                (checkDups.get(String.valueOf(winningWord.charAt(i - 1)).toLowerCase())-1));
-                    styleClass = "present-letter";
-                    //styleClass = "wrong-letter";
+                else if(winningWord.contains(currentCharacter) && checkDups.get(currentCharacter)>0){ 
+                            //(checkDups.get(String.valueOf(winningWord.charAt(i - 1)).toLowerCase()) >0)){
+                    //checkDups.replace(String.valueOf(winningWord.charAt(i - 1)).toLowerCase(), 
+                                //(checkDups.get(String.valueOf(winningWord.charAt(i - 1)).toLowerCase())-1));
+                    //if(checkDups.get(String.valueOf(winningWord.charAt(i - 1)).toLowerCase()) >0){
+                        styleClass = "present-letter";
+                        //int replace=0;
+                        //String key= String.valueOf(winningWord.charAt(i-1)).toLowerCase();
+                        //replace= checkDups.get(currentCharacter)-1;
+                        checkDups.put(currentCharacter, (checkDups.get(currentCharacter)-1));
                 }
+                    //else{
+                        //styleClass = "wrong-letter";
+                   //}
+                    //styleClass = "wrong-letter";
+                    //System.out.println("True or False current char in winning word"+ winningWord.contains(currentCharacter));
+                    //System.out.println("The value of the checkDup: "+ checkDups.get(String.valueOf(winningWord.charAt(i - 1)).toLowerCase()));
+                
                 else{
                     styleClass = "wrong-letter";
                 }
-                //System.out.println(skipIndex);
-                //System.out.println(checkDups);
-                //System.out.println("End of pass "+ i + "\n");
+                System.out.println("skip index at bottom of for loop "+skipIndex);
+                System.out.println("check dup at bottom of for loop "+checkDups);
+                System.out.println("End of pass "+ i + "\n");
                 transit(label, styleClass);
             }
         }
+        System.out.println(winningWord);
+        System.out.println("skip index at outside of for loop "+skipIndex);
+        System.out.println("check dup at outside of for loop"+checkDups);
     }
 
     private void transit(Label label, String styleClass ){
