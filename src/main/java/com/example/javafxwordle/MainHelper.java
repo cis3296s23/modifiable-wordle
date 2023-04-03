@@ -181,7 +181,7 @@ public class MainHelper {
             Label label = getLabel(gridPane, searchRow, i);
             //
             //temp1.putAll(checkDups);
-            //String styleClass;
+            String styleClass;
             if (label != null) {
                 String currentCharacter = String.valueOf(label.getText().charAt(0)).toLowerCase();
                 if (String.valueOf(winningWord.charAt(i - 1)).toLowerCase().equals(currentCharacter)) {
@@ -190,16 +190,17 @@ public class MainHelper {
                     skipIndex.add(i);
                     System.out.println(skipIndex);
                     //System.out.println(temp1);
+                    checkDups.put(currentCharacter, (checkDups.get(currentCharacter)-1));
                     //styleClass = "correct-letter";
                     //transit(label, styleClass);
-                //} else if (winningWord.contains(currentCharacter)) {
+                //} else if ((winningWord.contains(currentCharacter)) && !(checkDups.get(currentCharacter)==0)) {
+                    //checkDups.put(currentCharacter, (checkDups.get(currentCharacter)-1));
                     //styleClass = "present-letter";
-                } //else {
+                //} else {
                     //styleClass = "wrong-letter";
-                //}
-                //transit(label, styleClass);
-                
+                }
             }
+            //transit(label, styleClass);
         }
 
         for (int i = 1; i <= MAX_COLUMN; i++) {
@@ -222,7 +223,7 @@ public class MainHelper {
                 //transit(label, styleClass);
                 if(skipIndex.contains(i)){
                     styleClass = "correct-letter";
-                    checkDups.put(currentCharacter, (checkDups.get(currentCharacter)-1));
+                    //checkDups.put(currentCharacter, (checkDups.get(currentCharacter)-1));
                     //System.out.println("Skip this index " + i +", since it is in the correct postion");
                     //System.out.println(skipIndex);
                     //System.out.println(checkDups);
@@ -249,12 +250,13 @@ public class MainHelper {
                 else{
                     styleClass = "wrong-letter";
                 }
-                System.out.println("skip index at bottom of for loop "+skipIndex);
-                System.out.println("check dup at bottom of for loop "+checkDups);
-                System.out.println("End of pass "+ i + "\n");
+                //System.out.println("skip index at bottom of for loop "+skipIndex);
+                //System.out.println("check dup at bottom of for loop "+checkDups);
+                //System.out.println("End of pass "+ i + "\n");
                 transit(label, styleClass);
             }
         }
+
         System.out.println(winningWord);
         System.out.println("skip index at outside of for loop "+skipIndex);
         System.out.println("check dup at outside of for loop"+checkDups);
