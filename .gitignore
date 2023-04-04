@@ -6,3 +6,5 @@ target/classes/com/example/javafxwordle/images/icons8-restart-40.png
 *.class
 *.fxml
 *.png
+*.class
+target/classes/module-info.class
