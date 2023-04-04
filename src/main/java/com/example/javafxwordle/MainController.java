@@ -21,7 +21,7 @@ public class MainController {
     @FXML
     public ImageView helpIcon;
     @FXML
-    public ImageView githubIcon;
+    public ImageView stopwatchIcon;
     @FXML
     public HBox titleHBox;
     @FXML
