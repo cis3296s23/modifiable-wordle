@@ -23,6 +23,8 @@ public class MainHelper {
     private final String[] secondRowLetters = {"A", "S", "D", "F", "G", "H", "J", "K", "L"};
     private final String[] thirdRowLetters = {"↵", "Z", "X", "C", "V", "B", "N", "M", "←"};
 
+    Stopwatch timeTrial= new Stopwatch();
+
     private int CURRENT_ROW = 1;
     private int CURRENT_COLUMN = 1;
     private final int MAX_COLUMN = 5;
@@ -38,20 +40,7 @@ public class MainHelper {
         if (INSTANCE == null){
             INSTANCE = new MainHelper();
         }
-        //int i= winningWord.length();
-        //test=winningWords;
-        //int count=1;
-        //something.contains(winningWords);
-        /*
-        for(int i=0; i<winningWord.length(); i++){
-            for(int j=0; j<winningWord.length(); j++){
-                if((winningWord.charAt(i)== winningWord.charAt(j)) && (i!=j) ){
-                    count++;
-                }
-
-            }
-        }
-*/
+        
         return INSTANCE;
     }
 
@@ -157,13 +146,10 @@ public class MainHelper {
     }
 
     private void updateRowColors(GridPane gridPane, int searchRow) {
-        //int[][] flags= new int [2][5];
+        
         HashMap <String, Integer> checkDups= new HashMap<String, Integer>();
         HashSet<Integer> skipIndex= new HashSet<Integer>();
-        HashMap <String, Integer> temp1= new HashMap<String, Integer>();
-        //for (int i=0; i<winningWord.length(); i++){
-            //flags[0][i]= winningWord.charAt(i);
-        //}
+        
         int count=1;
         for(int i=0; i< winningWord.length(); i++){
             for(int j=0; j<winningWord.length(); j++){
@@ -176,90 +162,44 @@ public class MainHelper {
             }
             count=1;
         }
-        System.out.println("The Before: " + checkDups);
+        //System.out.println("The Before: " + checkDups);
         for (int i = 1; i <= MAX_COLUMN; i++) {
             Label label = getLabel(gridPane, searchRow, i);
-            //
-            //temp1.putAll(checkDups);
-            String styleClass;
+
             if (label != null) {
                 String currentCharacter = String.valueOf(label.getText().charAt(0)).toLowerCase();
                 if (String.valueOf(winningWord.charAt(i - 1)).toLowerCase().equals(currentCharacter)) {
-                    //checkDups.replace(String.valueOf(winningWord.charAt(i - 1)).toLowerCase(), 
-                                //(temp1.get(String.valueOf(winningWord.charAt(i - 1)).toLowerCase())-1);
                     skipIndex.add(i);
-                    System.out.println(skipIndex);
-                    //System.out.println(temp1);
+                    
                     checkDups.put(currentCharacter, (checkDups.get(currentCharacter)-1));
-                    //styleClass = "correct-letter";
-                    //transit(label, styleClass);
-                //} else if ((winningWord.contains(currentCharacter)) && !(checkDups.get(currentCharacter)==0)) {
-                    //checkDups.put(currentCharacter, (checkDups.get(currentCharacter)-1));
-                    //styleClass = "present-letter";
-                //} else {
-                    //styleClass = "wrong-letter";
                 }
             }
-            //transit(label, styleClass);
         }
 
         for (int i = 1; i <= MAX_COLUMN; i++) {
-            //System.out.println("This is so dumb\n");
             Label label = getLabel(gridPane, searchRow, i);
             String styleClass;
             if (label != null) {
                 String currentCharacter = String.valueOf(label.getText().charAt(0)).toLowerCase();
-                //if (String.valueOf(winningWord.charAt(i - 1)).toLowerCase().equals(currentCharacter)) {
-                    //checkDups.replace(String.valueOf(winningWord.charAt(i - 1)).toLowerCase(), 
-                                //(checkDups.get(String.valueOf(winningWord.charAt(i - 1)).toLowerCase())-1));
-                    //skipIndex.add(i);
-                    //styleClass = "correct-letter";
-                    //transit(label, styleClass);
-                //} else if (winningWord.contains(currentCharacter)) {
-                    //styleClass = "present-letter";
-                //} else {
-                    //styleClass = "wrong-letter";
-                //}
-                //transit(label, styleClass);
                 if(skipIndex.contains(i)){
                     styleClass = "correct-letter";
-                    //checkDups.put(currentCharacter, (checkDups.get(currentCharacter)-1));
-                    //System.out.println("Skip this index " + i +", since it is in the correct postion");
-                    //System.out.println(skipIndex);
-                    //System.out.println(checkDups);
                 }
                 
                 else if(winningWord.contains(currentCharacter) && checkDups.get(currentCharacter)>0){ 
-                            //(checkDups.get(String.valueOf(winningWord.charAt(i - 1)).toLowerCase()) >0)){
-                    //checkDups.replace(String.valueOf(winningWord.charAt(i - 1)).toLowerCase(), 
-                                //(checkDups.get(String.valueOf(winningWord.charAt(i - 1)).toLowerCase())-1));
-                    //if(checkDups.get(String.valueOf(winningWord.charAt(i - 1)).toLowerCase()) >0){
-                        styleClass = "present-letter";
-                        //int replace=0;
-                        //String key= String.valueOf(winningWord.charAt(i-1)).toLowerCase();
-                        //replace= checkDups.get(currentCharacter)-1;
-                        checkDups.put(currentCharacter, (checkDups.get(currentCharacter)-1));
+                    styleClass = "present-letter";
+                        
+                    checkDups.put(currentCharacter, (checkDups.get(currentCharacter)-1));
                 }
-                    //else{
-                        //styleClass = "wrong-letter";
-                   //}
-                    //styleClass = "wrong-letter";
-                    //System.out.println("True or False current char in winning word"+ winningWord.contains(currentCharacter));
-                    //System.out.println("The value of the checkDup: "+ checkDups.get(String.valueOf(winningWord.charAt(i - 1)).toLowerCase()));
-                
                 else{
                     styleClass = "wrong-letter";
                 }
-                //System.out.println("skip index at bottom of for loop "+skipIndex);
-                //System.out.println("check dup at bottom of for loop "+checkDups);
-                //System.out.println("End of pass "+ i + "\n");
                 transit(label, styleClass);
             }
         }
 
         System.out.println(winningWord);
-        System.out.println("skip index at outside of for loop "+skipIndex);
-        System.out.println("check dup at outside of for loop"+checkDups);
+        //System.out.println("skip index at outside of for loop "+skipIndex);
+        //System.out.println("check dup at outside of for loop"+checkDups);
     }
 
     private void transit(Label label, String styleClass ){
@@ -368,7 +308,11 @@ public class MainHelper {
                                 GridPane keyboardRow3) {
         if (CURRENT_ROW <= MAX_ROW && CURRENT_COLUMN == MAX_COLUMN) {
             String guess = getWordFromCurrentRow(gridPane).toLowerCase();
+            if(isValidGuess(guess)){
+                timeTrial.start();
+            }
             if (guess.equals(winningWord)) {
+                timeTrial.stop();
                 updateRowColors(gridPane, CURRENT_ROW);
                 updateKeyboardColors(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
                 ScoreWindow.display(true, winningWord);
@@ -378,6 +322,7 @@ public class MainHelper {
                 if (CURRENT_ROW == MAX_ROW) {
                     ScoreWindow.display(false, winningWord);
                     if (ScoreWindow.resetGame.get())
+                        timeTrial.reset();
                         resetGame(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
                 }
                 CURRENT_ROW++;
@@ -386,6 +331,8 @@ public class MainHelper {
                 MainApplication.showToast();
             }
             if (ScoreWindow.resetGame.get()) {
+                timeTrial.reset();
+                System.out.println("This line should only print when the game is reset");
                 resetGame(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
                 ScoreWindow.resetGame.set(false);
             }

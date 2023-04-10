@@ -4,18 +4,25 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class Stopwatch implements ActionListener {
+import javafx.application.Application;
+import javafx.scene.*;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import javafx.scene.control.Label;
+public class version extends Application implements ActionListener {
     
     int milliseconds=0;
     int seconds=0;
     int minutes=0;
     int hours=0;
     //int days=0;
-    JLabel timeLabel= new JLabel();
-    JFrame frame= new JFrame();
+    Label timeLabel= new Label();
+    Frame frame= new Frame();
 
-    JButton startButton= new JButton("Start");
-    JButton resetButton= new JButton("Reset");
+    VBox root= new VBox();
+
+    Button startButton= new Button("Start");
+    Button resetButton= new Button("Reset");
 
     boolean started=false;
 
@@ -44,13 +51,13 @@ public class Stopwatch implements ActionListener {
 
     });
 
-    Stopwatch(){
+    version(){
         timeLabel.setText(hr + ":" + min + ":" + sec);
-        timeLabel.setBounds(100,100,200,100);
-        timeLabel.setFont(new Font("Verdana", Font.PLAIN, 35));
-        timeLabel.setBorder(BorderFactory.createBevelBorder(1));
-        timeLabel.setOpaque(true);
-        timeLabel.setHorizontalAlignment(JTextField.CENTER);
+        //timeLabel.setBounds(100,100,200,100);
+        //timeLabel.setFont(new Font("Verdana", Font.PLAIN, 35));
+        //timeLabel.setBorder(BorderFactory.createBevelBorder(1));
+        //timeLabel.setOpaque(true);
+        //timeLabel.setHorizontalAlignment(JTextField.CENTER);
 
         startButton.setBounds(100,200,100,50);
         startButton.setFont(new Font ("Ink Free", Font.PLAIN, 20));
@@ -64,12 +71,29 @@ public class Stopwatch implements ActionListener {
 
         //frame.add(startButton);
         //frame.add(resetButton);
-        frame.add(timeLabel);
+        //frame.add(timeLabel);
 
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(420,420);
-        frame.setLayout(null);
-        frame.setVisible(true);
+        //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //frame.setSize(420,420);
+        //frame.setLayout(null);
+        //frame.setVisible(true);
+    }
+
+    @Override
+    public void start(Stage stage) throws Exception{
+        stage.setTitle("This is just a test");
+        stage.setWidth(400);
+        stage.setHeight(500);
+
+        VBox root= new VBox();
+        Label label1 = new Label("This is just some random text to test if this actually shows up");
+        root.getChildren().addAll(label1);
+
+        Scene scene= new Scene(root);
+
+        stage.setScene(scene);
+
+        stage.show();
     }
 
 
@@ -78,36 +102,33 @@ public class Stopwatch implements ActionListener {
         if(e.getSource()== startButton){
             if(started==false){
                 started=true;
-                startButton.setText("Stop");
-                start();
+                //startButton.setText("Stop");
+                startTime();
             }
         
             else{
                 started= false;
-                startButton.setText("Start");
-                stop();
+                //startButton.setText("Start");
+                stopTime();
             }
         }
         if(e.getSource()== resetButton){
             started=false;
-            startButton.setText("Start");
-            reset();
+            //startButton.setText("Start");
+            resetTime();
         }
     }
 
-    void start(){
-        frame.setVisible(true);
+    void startTime(){
         time.start();
 
     }
 
-    void stop(){
+    void stopTime(){
         time.stop();
-        frame.setVisible(false); 
-        //frame.dispose(); 
     }
 
-    void reset(){
+    void resetTime(){
         time.stop();
 
         milliseconds=0;
@@ -125,11 +146,12 @@ public class Stopwatch implements ActionListener {
 
 
     }
-    //public static void main(String [] args){
+    public static void main(String [] args){
         //Stopwatch x= new Stopwatch();
-        //System.out.println("This is just some text that should print to screen.");
-        //x.start();
-    //}
+        //version y= new version();
+        //Stage stage= new Stage();
+        //y.start(stage);
+        launch(args);
+    }
 
 }
-

@@ -32,6 +32,8 @@ public class MainApplication extends Application {
         mainController.getRandomWord();
         mainController.helpIcon.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/help.png"))));
         mainController.restartIcon.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/icons8-restart-40.png"))));
+        //mainController.stopwatchIcon.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/stopwatch.png"))));
+        //mainController.stopwatchIcon.setOnMouseClicked(me -> getHostServices().showDocument("https://google.com/"));
 
         double screenWidth = Screen.getPrimary().getBounds().getWidth();
         double screenHeight = Screen.getPrimary().getBounds().getHeight();
