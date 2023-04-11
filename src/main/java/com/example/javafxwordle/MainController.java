@@ -66,4 +66,8 @@ public class MainController {
         mainHelper.restart(restartIcon, gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
     }
 
+    public void enableTimer() {
+        System.out.println("THIS IS FOR DEBUGGING PURPOSES: You clicked the stopwatch icon.");
+    }
+
 }

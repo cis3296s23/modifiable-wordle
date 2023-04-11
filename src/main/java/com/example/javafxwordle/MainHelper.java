@@ -289,6 +289,7 @@ public class MainHelper {
 
     public void getRandomWord() {
         winningWord = winningWords.get(new Random().nextInt(winningWords.size()));
+        System.out.println("THIS IS FOR DEBUGGING PURPOSES: " + winningWord);
     }
 
     private boolean isValidGuess(String guess) {
