@@ -8,6 +8,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.text.Font;
 import javafx.util.Duration;
 
 import java.util.*;
@@ -29,10 +30,15 @@ public class MainHelper {
     private int CURRENT_COLUMN = 1;
     private final int MAX_COLUMN = 5;
     private final int MAX_ROW = 6;
-    private static String winningWord;
-    //int dupFlag=0;
-    //static HashSet something= new HashMap<>();
-    //Let the key be the index and the value be the number of said letters.
+    private String winningWord;
+
+    private boolean timeTrialEnabled = false;
+    private Label stopwatchLabel = new Label("0");
+    private Timeline stopwatch = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+        int seconds = Integer.parseInt(stopwatchLabel.getText()) + 1;
+        stopwatchLabel.setText(String.valueOf(seconds));
+    }));
+
     private MainHelper() {
     }
 
@@ -58,6 +64,11 @@ public class MainHelper {
         }
         for (Label label : titleLetters)
             titleHBox.getChildren().add(label);
+    }
+
+    public void createExtraHBox(HBox extraHBox) {
+        stopwatchLabel.setFont(Font.font("Cambria", 30));
+        extraHBox.getChildren().add(stopwatchLabel);
     }
 
     public void createGrid(GridPane gridPane) {
@@ -145,11 +156,27 @@ public class MainHelper {
         }
     }
 
+    /*
+        Original source code had problems with duplicate letters showing up as yellow despite there only
+        being one of the letter in the winningWord.
+
+        BEFORE:
+            Example: winningWord = ANIME
+                     guess = SALSA
+            Both the A in the 2nd and 5th position would highlight yellow.
+
+        AFTER:
+            Example: winningWord = ANIME
+                     guess = SALSA
+            Only the first A in the 2nd position will highlight yellow.
+
+        contributors: Marcie Grayson
+    */
     private void updateRowColors(GridPane gridPane, int searchRow) {
-        
-        HashMap <String, Integer> checkDups= new HashMap<String, Integer>();
-        HashSet<Integer> skipIndex= new HashSet<Integer>();
-        
+
+        // Using HashMaps to resolve bugs
+        HashMap <String, Integer> checkDups = new HashMap<String, Integer>();
+
         int count=1;
         for(int i=0; i< winningWord.length(); i++){
             for(int j=0; j<winningWord.length(); j++){
@@ -162,48 +189,47 @@ public class MainHelper {
             }
             count=1;
         }
-        //System.out.println("The Before: " + checkDups);
-        for (int i = 1; i <= MAX_COLUMN; i++) {
-            Label label = getLabel(gridPane, searchRow, i);
-
-            if (label != null) {
-                String currentCharacter = String.valueOf(label.getText().charAt(0)).toLowerCase();
-                if (String.valueOf(winningWord.charAt(i - 1)).toLowerCase().equals(currentCharacter)) {
-                    skipIndex.add(i);
-                    
-                    checkDups.put(currentCharacter, (checkDups.get(currentCharacter)-1));
-                }
-            }
-        }
 
         for (int i = 1; i <= MAX_COLUMN; i++) {
             Label label = getLabel(gridPane, searchRow, i);
             String styleClass;
             if (label != null) {
                 String currentCharacter = String.valueOf(label.getText().charAt(0)).toLowerCase();
-                if(skipIndex.contains(i)){
+                boolean isCorrectLetter = String.valueOf(winningWord.charAt(i - 1)).toLowerCase().equals(currentCharacter);
+                boolean isPresentLetter = winningWord.contains(currentCharacter) && checkDups.get(currentCharacter) > 0;
+
+                if (isCorrectLetter) {
                     styleClass = "correct-letter";
-                }
-                
-                else if(winningWord.contains(currentCharacter) && checkDups.get(currentCharacter)>0){ 
+                } else if (isPresentLetter) {
                     styleClass = "present-letter";
-                        
-                    checkDups.put(currentCharacter, (checkDups.get(currentCharacter)-1));
-                }
-                else{
+                    checkDups.put(currentCharacter, (checkDups.get(currentCharacter) - 1));
+                } else {
                     styleClass = "wrong-letter";
                 }
                 transit(label, styleClass);
+
+                if (isCorrectLetter) {
+                    checkDups.put(currentCharacter, (checkDups.get(currentCharacter) - 1));
+                }
             }
         }
 
-        System.out.println(winningWord);
-        //System.out.println("skip index at outside of for loop "+skipIndex);
-        //System.out.println("check dup at outside of for loop"+checkDups);
-    }
+        /*
+        // OLD IMPLEMENTATION
+        for (int i = 1; i <= MAX_COLUMN; i++) {
+            Label label = getLabel(gridPane, searchRow, i);
+            String styleClass;
+            if (label != null) {
+                String currentCharacter = String.valueOf(label.getText().charAt(0)).toLowerCase();
+                if (String.valueOf(winningWord.charAt(i - 1)).toLowerCase().equals(currentCharacter)) {
+                    styleClass = "correct-letter";
+                } else if (winningWord.contains(currentCharacter)) {
+                    styleClass = "present-letter";
+                } else {
+                    styleClass = "wrong-letter";
+                }
 
-    private void transit(Label label, String styleClass ){
-        FadeTransition firstFadeTransition = new FadeTransition(Duration.millis(300), label);
+                FadeTransition firstFadeTransition = new FadeTransition(Duration.millis(300), label);
                 firstFadeTransition.setFromValue(1);
                 firstFadeTransition.setToValue(0.2);
                 firstFadeTransition.setOnFinished(e -> {
@@ -216,6 +242,25 @@ public class MainHelper {
                 secondFadeTransition.setToValue(1);
 
                 new SequentialTransition(firstFadeTransition, secondFadeTransition).play();
+            }
+        }
+        */
+    }
+
+    private void transit(Label label, String styleClass ){
+        FadeTransition firstFadeTransition = new FadeTransition(Duration.millis(300), label);
+        firstFadeTransition.setFromValue(1);
+        firstFadeTransition.setToValue(0.2);
+        firstFadeTransition.setOnFinished(e -> {
+            label.getStyleClass().clear();
+            label.getStyleClass().setAll(styleClass);
+        });
+
+        FadeTransition secondFadeTransition = new FadeTransition(Duration.millis(300), label);
+        secondFadeTransition.setFromValue(0.2);
+        secondFadeTransition.setToValue(1);
+
+        new SequentialTransition(firstFadeTransition, secondFadeTransition).play();
     }
 
     private void updateKeyboardColors(GridPane gridPane, GridPane keyboardRow1, GridPane keyboardRow2, GridPane keyboardRow3) {
@@ -315,16 +360,32 @@ public class MainHelper {
                 timeTrial.stop();
                 updateRowColors(gridPane, CURRENT_ROW);
                 updateKeyboardColors(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
+
+                if(timeTrialEnabled && CURRENT_ROW != 0) {
+                    stopwatch.pause();
+                }
+
                 ScoreWindow.display(true, winningWord);
             } else if (isValidGuess(guess)) {
                 updateRowColors(gridPane, CURRENT_ROW);
                 updateKeyboardColors(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
+
+                // if this our last guess
                 if (CURRENT_ROW == MAX_ROW) {
+                    if(timeTrialEnabled) {
+                        stopwatch.pause();
+                    }
                     ScoreWindow.display(false, winningWord);
                     if (ScoreWindow.resetGame.get())
                         timeTrial.reset();
                         resetGame(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
                 }
+
+                if(timeTrialEnabled) {
+                    stopwatch.setCycleCount(Animation.INDEFINITE);
+                    stopwatch.play();
+                }
+
                 CURRENT_ROW++;
                 CURRENT_COLUMN = 1;
             } else {
@@ -343,6 +404,7 @@ public class MainHelper {
 
     public void getRandomWord() {
         winningWord = winningWords.get(new Random().nextInt(winningWords.size()));
+        System.out.println("THIS IS FOR DEBUGGING PURPOSES: " + winningWord);
     }
 
     private boolean isValidGuess(String guess) {
@@ -412,6 +474,32 @@ public class MainHelper {
             if (string.equalsIgnoreCase(letter))
                 return true;
         return false;
+    }
+
+    /*
+        Time Trial Mode : helper methods
+
+        Time Trial Mode starts a timer when the user enters their first VALID guess. Until a
+        user finishes a Wordle game, successfully or otherwise, the elapsed game time will
+        be shown on the board.
+
+        You can see more implementation details in onEnterPressed().
+
+        contributors: Abir, Ato, Kevin, Marcie
+    */
+    public void toggleTimeTrial(HBox extraHBox, ImageView stopwatchIcon) {
+        if(timeTrialEnabled) {
+            extraHBox.setVisible(false);
+            extraHBox.setManaged(false);
+            stopwatchLabel.setText("0");
+            timeTrialEnabled = false;
+            System.out.println("THIS IS FOR DEBUGGING PURPOSES: Time Trial Mode disabled.");
+        } else {
+            extraHBox.setVisible(true);
+            extraHBox.setManaged(true);
+            timeTrialEnabled = true;
+            System.out.println("THIS IS FOR DEBUGGING PURPOSES: Time Trial Mode enabled.");
+        }
     }
 
 }

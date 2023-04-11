@@ -701,6 +701,7 @@ baser
 bases
 basho
 basij
+basil
 basks
 bason
 basse
@@ -4530,6 +4531,7 @@ jolty
 jomon
 jomos
 jones
+jonny
 jongs
 jonty
 jooks
@@ -4628,6 +4630,7 @@ kapas
 kaphs
 kapok
 kapow
+kappa
 kapus
 kaput
 karas
