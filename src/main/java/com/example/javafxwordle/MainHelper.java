@@ -29,6 +29,8 @@ public class MainHelper {
     private final int MAX_ROW = 6;
     private String winningWord;
 
+    private boolean timeTrialEnabled = false;
+
     private MainHelper() {
     }
 
@@ -442,6 +444,28 @@ public class MainHelper {
             if (string.equalsIgnoreCase(letter))
                 return true;
         return false;
+    }
+
+    /*
+        Time Trial Mode : helper methods
+
+        Time Trial Mode starts a timer when the user enters their first VALID guess. When a
+        user finishes a Wordle game, successfully or otherwise, the elapsed game time will
+        be shown on the ScoreWindow.
+
+        In the case that the user guesses the word on their first guess, a special message
+        is shown instead. :)
+
+        contributors: Abir, Ato, Kevin, Marcie
+    */
+    public void toggleTimeTrial(ImageView stopwatchIcon) {
+        if(timeTrialEnabled) {
+            timeTrialEnabled = false;
+            System.out.println("THIS IS FOR DEBUGGING PURPOSES: Time Trial Mode disabled.");
+        } else {
+            timeTrialEnabled = true;
+            System.out.println("THIS IS FOR DEBUGGING PURPOSES: Time Trial Mode enabled.");
+        }
     }
 
 }

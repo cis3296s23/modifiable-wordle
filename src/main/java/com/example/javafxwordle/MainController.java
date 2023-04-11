@@ -67,9 +67,8 @@ public class MainController {
     }
 
     // Time Trial Mode; contributors: Abir, Ato, Kevin, Marcie
-    public void enableTimer() {
-        System.out.println("THIS IS FOR DEBUGGING PURPOSES: You clicked the stopwatch icon.");
-        // mainHelper.??? // not sure what to call method yet
+    public void toggleTimeTrial() {
+        mainHelper.toggleTimeTrial(stopwatchIcon);
     }
 
 }
