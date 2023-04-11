@@ -139,8 +139,66 @@ public class MainHelper {
         }
     }
 
+    /*
+        Original source code had problems with duplicate letters showing up as yellow despite there only
+        being one of the letter in the winningWord.
+
+        BEFORE:
+            Example: winningWord = ANIME
+                     guess = SALSA
+            Both the A in the 2nd and 5th position would highlight yellow.
+
+        AFTER:
+            Example: winningWord = ANIME
+                     guess = SALSA
+            Only the first A in the 2nd position will highlight yellow.
+
+        contributors: Marcie Grayson
+    */
     private void updateRowColors(GridPane gridPane, int searchRow) {
 
+        // Using HashMaps to resolve bugs
+        HashMap <String, Integer> checkDups = new HashMap<String, Integer>();
+
+        int count=1;
+        for(int i=0; i< winningWord.length(); i++){
+            for(int j=0; j<winningWord.length(); j++){
+                if((i!=j) && (winningWord.charAt(i)== winningWord.charAt(j))){
+                    count++;
+                }
+            }
+            if(!checkDups.containsKey((String.valueOf(winningWord.charAt(i))).toLowerCase())){
+                checkDups.put(String.valueOf(winningWord.charAt(i)).toLowerCase(), count);
+            }
+            count=1;
+        }
+
+        for (int i = 1; i <= MAX_COLUMN; i++) {
+            Label label = getLabel(gridPane, searchRow, i);
+            String styleClass;
+            if (label != null) {
+                String currentCharacter = String.valueOf(label.getText().charAt(0)).toLowerCase();
+                boolean isCorrectLetter = String.valueOf(winningWord.charAt(i - 1)).toLowerCase().equals(currentCharacter);
+                boolean isPresentLetter = winningWord.contains(currentCharacter) && checkDups.get(currentCharacter) > 0;
+
+                if (isCorrectLetter) {
+                    styleClass = "correct-letter";
+                } else if (isPresentLetter) {
+                    styleClass = "present-letter";
+                    checkDups.put(currentCharacter, (checkDups.get(currentCharacter) - 1));
+                } else {
+                    styleClass = "wrong-letter";
+                }
+                transit(label, styleClass);
+
+                if (isCorrectLetter) {
+                    checkDups.put(currentCharacter, (checkDups.get(currentCharacter) - 1));
+                }
+            }
+        }
+
+        /*
+        // OLD IMPLEMENTATION
         for (int i = 1; i <= MAX_COLUMN; i++) {
             Label label = getLabel(gridPane, searchRow, i);
             String styleClass;
@@ -169,6 +227,23 @@ public class MainHelper {
                 new SequentialTransition(firstFadeTransition, secondFadeTransition).play();
             }
         }
+        */
+    }
+
+    private void transit(Label label, String styleClass ){
+        FadeTransition firstFadeTransition = new FadeTransition(Duration.millis(300), label);
+        firstFadeTransition.setFromValue(1);
+        firstFadeTransition.setToValue(0.2);
+        firstFadeTransition.setOnFinished(e -> {
+            label.getStyleClass().clear();
+            label.getStyleClass().setAll(styleClass);
+        });
+
+        FadeTransition secondFadeTransition = new FadeTransition(Duration.millis(300), label);
+        secondFadeTransition.setFromValue(0.2);
+        secondFadeTransition.setToValue(1);
+
+        new SequentialTransition(firstFadeTransition, secondFadeTransition).play();
     }
 
     private void updateKeyboardColors(GridPane gridPane, GridPane keyboardRow1, GridPane keyboardRow2, GridPane keyboardRow3) {
