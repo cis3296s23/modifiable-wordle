@@ -1,6 +1,7 @@
 package com.example.javafxwordle;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
@@ -21,9 +22,11 @@ public class MainController {
     @FXML
     public ImageView helpIcon;
     @FXML
-    public ImageView githubIcon;
+    public ImageView stopwatchIcon;
     @FXML
     public HBox titleHBox;
+    @FXML
+    public HBox extraHBox;
     @FXML
     public ImageView restartIcon;
 
@@ -31,6 +34,7 @@ public class MainController {
         createGrid();
         createKeyboard();
         createTitleHBox();
+        createExtraHBox();
     }
 
     public void createGrid() {
@@ -62,8 +66,17 @@ public class MainController {
         mainHelper.createTitleHBox(titleHBox);
     }
 
+    public void createExtraHBox() {
+        mainHelper.createExtraHBox(extraHBox);
+    }
+
     public void restart() {
         mainHelper.restart(restartIcon, gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
+    }
+
+    // Time Trial Mode; contributors: Abir, Ato, Kevin, Marcie
+    public void toggleTimeTrial() {
+        mainHelper.toggleTimeTrial(extraHBox, stopwatchIcon);
     }
 
 }
