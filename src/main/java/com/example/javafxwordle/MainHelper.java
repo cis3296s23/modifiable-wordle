@@ -8,6 +8,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.text.Font;
 import javafx.util.Duration;
 
 import java.util.*;
@@ -30,6 +31,11 @@ public class MainHelper {
     private String winningWord;
 
     private boolean timeTrialEnabled = false;
+    private Label stopwatchLabel = new Label("0");
+    private Timeline stopwatch = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+        int seconds = Integer.parseInt(stopwatchLabel.getText()) + 1;
+        stopwatchLabel.setText(String.valueOf(seconds));
+    }));
 
     private MainHelper() {
     }
@@ -54,6 +60,11 @@ public class MainHelper {
         }
         for (Label label : titleLetters)
             titleHBox.getChildren().add(label);
+    }
+
+    public void createExtraHBox(HBox extraHBox) {
+        stopwatchLabel.setFont(Font.font("Cambria", 30));
+        extraHBox.getChildren().add(stopwatchLabel);
     }
 
     public void createGrid(GridPane gridPane) {
@@ -341,23 +352,31 @@ public class MainHelper {
             if (guess.equals(winningWord)) {
                 updateRowColors(gridPane, CURRENT_ROW);
                 updateKeyboardColors(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
-                /*
-                    if timerStarted
-                        stopTimer
-                    else
-                        report time as 0
-                 */
+
+                if(timeTrialEnabled && CURRENT_ROW != 0) {
+                    stopwatch.pause();
+                }
+
                 ScoreWindow.display(true, winningWord);
             } else if (isValidGuess(guess)) {
                 updateRowColors(gridPane, CURRENT_ROW);
                 updateKeyboardColors(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
-                // startTimer
+
+                // if this our last guess
                 if (CURRENT_ROW == MAX_ROW) {
-                    // stopTimer
+                    if(timeTrialEnabled) {
+                        stopwatch.pause();
+                    }
                     ScoreWindow.display(false, winningWord);
                     if (ScoreWindow.resetGame.get())
                         resetGame(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
                 }
+
+                if(timeTrialEnabled) {
+                    stopwatch.setCycleCount(Animation.INDEFINITE);
+                    stopwatch.play();
+                }
+
                 CURRENT_ROW++;
                 CURRENT_COLUMN = 1;
             } else {
@@ -449,20 +468,24 @@ public class MainHelper {
     /*
         Time Trial Mode : helper methods
 
-        Time Trial Mode starts a timer when the user enters their first VALID guess. When a
+        Time Trial Mode starts a timer when the user enters their first VALID guess. Until a
         user finishes a Wordle game, successfully or otherwise, the elapsed game time will
-        be shown on the ScoreWindow.
+        be shown on the board.
 
-        In the case that the user guesses the word on their first guess, a special message
-        is shown instead. :)
+        You can see more implementation details in onEnterPressed().
 
         contributors: Abir, Ato, Kevin, Marcie
     */
-    public void toggleTimeTrial(ImageView stopwatchIcon) {
+    public void toggleTimeTrial(HBox extraHBox, ImageView stopwatchIcon) {
         if(timeTrialEnabled) {
+            extraHBox.setVisible(false);
+            extraHBox.setManaged(false);
+            stopwatchLabel.setText("0");
             timeTrialEnabled = false;
             System.out.println("THIS IS FOR DEBUGGING PURPOSES: Time Trial Mode disabled.");
         } else {
+            extraHBox.setVisible(true);
+            extraHBox.setManaged(true);
             timeTrialEnabled = true;
             System.out.println("THIS IS FOR DEBUGGING PURPOSES: Time Trial Mode enabled.");
         }
