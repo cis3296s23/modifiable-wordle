@@ -66,8 +66,10 @@ public class MainController {
         mainHelper.restart(restartIcon, gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
     }
 
+    // Time Trial Mode; contributors: Abir, Ato, Kevin, Marcie
     public void enableTimer() {
         System.out.println("THIS IS FOR DEBUGGING PURPOSES: You clicked the stopwatch icon.");
+        // mainHelper.??? // not sure what to call method yet
     }
 
 }

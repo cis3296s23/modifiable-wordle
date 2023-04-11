@@ -339,11 +339,19 @@ public class MainHelper {
             if (guess.equals(winningWord)) {
                 updateRowColors(gridPane, CURRENT_ROW);
                 updateKeyboardColors(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
+                /*
+                    if timerStarted
+                        stopTimer
+                    else
+                        report time as 0
+                 */
                 ScoreWindow.display(true, winningWord);
             } else if (isValidGuess(guess)) {
                 updateRowColors(gridPane, CURRENT_ROW);
                 updateKeyboardColors(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
+                // startTimer
                 if (CURRENT_ROW == MAX_ROW) {
+                    // stopTimer
                     ScoreWindow.display(false, winningWord);
                     if (ScoreWindow.resetGame.get())
                         resetGame(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);

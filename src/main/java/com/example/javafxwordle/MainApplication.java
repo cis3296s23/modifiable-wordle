@@ -32,6 +32,7 @@ public class MainApplication extends Application {
         mainController.getRandomWord();
         mainController.helpIcon.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/help.png"))));
         mainController.restartIcon.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/icons8-restart-40.png"))));
+        // Icon for Time Trial mode; contributors: Abir, Ato, Kevin, Marcie
         mainController.stopwatchIcon.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/stopwatch.png"))));
 
         double screenWidth = Screen.getPrimary().getBounds().getWidth();
