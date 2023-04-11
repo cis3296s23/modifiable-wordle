@@ -32,8 +32,8 @@ public class MainApplication extends Application {
         mainController.getRandomWord();
         mainController.helpIcon.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/help.png"))));
         mainController.restartIcon.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/icons8-restart-40.png"))));
-        //mainController.stopwatchIcon.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/stopwatch.png"))));
-        //mainController.stopwatchIcon.setOnMouseClicked(me -> getHostServices().showDocument("https://google.com/"));
+        // Icon for Time Trial mode; contributors: Abir, Ato, Kevin, Marcie
+        mainController.stopwatchIcon.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/stopwatch.png"))));
 
         double screenWidth = Screen.getPrimary().getBounds().getWidth();
         double screenHeight = Screen.getPrimary().getBounds().getHeight();
@@ -42,7 +42,7 @@ public class MainApplication extends Application {
         stage.setMinHeight(730);
         stage.setMaxWidth(screenWidth);
         stage.setMaxHeight(screenHeight);
-        stage.setTitle("WordleFX");
+        stage.setTitle("Modifiable Wordle");
         stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/icon.png"))));
         stage.setScene(scene);
         stage.show();
