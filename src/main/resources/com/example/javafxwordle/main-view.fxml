@@ -6,6 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.*?>
 
+<?import javafx.scene.control.Label?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="Infinity" maxWidth="Infinity" prefHeight="715"
             prefWidth="500"
             styleClass="main-screen" xmlns="http://javafx.com/javafx/11"
@@ -26,7 +27,7 @@
                     <padding>
                         <Insets right="7" />
                     </padding>
-                    <ImageView fx:id="stopwatchIcon" fitHeight="32" fitWidth="32" />
+                    <ImageView fx:id="stopwatchIcon" fitHeight="32" fitWidth="32" onMouseClicked="#toggleTimeTrial" />
                 </Pane>
                 <Pane>
                     <ImageView fx:id="helpIcon" fitHeight="32" fitWidth="32" onMouseClicked="#showHelp" />
@@ -50,11 +51,17 @@
     </top>
 
     <center>
-        <GridPane fx:id="gridPane" alignment="CENTER" hgap="5" onKeyPressed="#onKeyPressed" vgap="5">
-            <BorderPane.margin>
-                <Insets bottom="15.0" top="15.0"/>
-            </BorderPane.margin>
-        </GridPane>
+        <VBox>
+            <HBox fx:id="extraHBox" alignment="CENTER" visible="false" managed="false">
+
+            </HBox>
+
+            <GridPane fx:id="gridPane" alignment="CENTER" hgap="5" onKeyPressed="#onKeyPressed" vgap="5">
+                <BorderPane.margin>
+                    <Insets bottom="15.0" top="15.0"/>
+                </BorderPane.margin>
+            </GridPane>
+        </VBox>
     </center>
 
     <bottom>
