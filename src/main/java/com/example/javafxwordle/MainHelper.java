@@ -24,6 +24,8 @@ public class MainHelper {
     private final String[] secondRowLetters = {"A", "S", "D", "F", "G", "H", "J", "K", "L"};
     private final String[] thirdRowLetters = {"↵", "Z", "X", "C", "V", "B", "N", "M", "←"};
 
+    Stopwatch timeTrial= new Stopwatch();
+
     private int CURRENT_ROW = 1;
     private int CURRENT_COLUMN = 1;
     private final int MAX_COLUMN = 5;
@@ -41,8 +43,10 @@ public class MainHelper {
     }
 
     public static MainHelper getInstance() {
-        if (INSTANCE == null)
+        if (INSTANCE == null){
             INSTANCE = new MainHelper();
+        }
+        
         return INSTANCE;
     }
 
@@ -349,7 +353,11 @@ public class MainHelper {
                                 GridPane keyboardRow3) {
         if (CURRENT_ROW <= MAX_ROW && CURRENT_COLUMN == MAX_COLUMN) {
             String guess = getWordFromCurrentRow(gridPane).toLowerCase();
+            if(isValidGuess(guess)){
+                timeTrial.start();
+            }
             if (guess.equals(winningWord)) {
+                timeTrial.stop();
                 updateRowColors(gridPane, CURRENT_ROW);
                 updateKeyboardColors(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
 
@@ -369,6 +377,7 @@ public class MainHelper {
                     }
                     ScoreWindow.display(false, winningWord);
                     if (ScoreWindow.resetGame.get())
+                        timeTrial.reset();
                         resetGame(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
                 }
 
@@ -383,6 +392,8 @@ public class MainHelper {
                 MainApplication.showToast();
             }
             if (ScoreWindow.resetGame.get()) {
+                timeTrial.reset();
+                System.out.println("This line should only print when the game is reset");
                 resetGame(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
                 ScoreWindow.resetGame.set(false);
             }
