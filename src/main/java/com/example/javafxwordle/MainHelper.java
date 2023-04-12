@@ -41,8 +41,10 @@ public class MainHelper {
     }
 
     public static MainHelper getInstance() {
-        if (INSTANCE == null)
+        if (INSTANCE == null){
             INSTANCE = new MainHelper();
+        }
+        
         return INSTANCE;
     }
 
@@ -383,6 +385,7 @@ public class MainHelper {
                 MainApplication.showToast();
             }
             if (ScoreWindow.resetGame.get()) {
+                System.out.println("This line should only print when the game is reset");
                 resetGame(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
                 ScoreWindow.resetGame.set(false);
             }
@@ -393,6 +396,7 @@ public class MainHelper {
 
     public void getRandomWord() {
         winningWord = winningWords.get(new Random().nextInt(winningWords.size()));
+        //winningWord = "debug";
         System.out.println("THIS IS FOR DEBUGGING PURPOSES: " + winningWord);
     }
 
