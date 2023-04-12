@@ -31,8 +31,8 @@ public class MainHelper {
     private String winningWord;
 
     private boolean timeTrialEnabled = false;
-    private Label stopwatchLabel = new Label("0");
-    private Timeline stopwatch = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+    private final Label stopwatchLabel = new Label("0");
+    private final Timeline stopwatch = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
         int seconds = Integer.parseInt(stopwatchLabel.getText()) + 1;
         stopwatchLabel.setText(String.valueOf(seconds));
     }));
@@ -444,6 +444,8 @@ public class MainHelper {
         rotateTransition.setToAngle(360);
         rotateTransition.setOnFinished(ae -> resetGame(gridPane, keyboardRow1, keyboardRow2, keyboardRow3));
         rotateTransition.play();
+        stopwatchLabel.setText("0");
+        stopwatch.pause();
     }
 
     private boolean binarySearch(ArrayList<String> list, String string) {
@@ -481,6 +483,7 @@ public class MainHelper {
             extraHBox.setVisible(false);
             extraHBox.setManaged(false);
             stopwatchLabel.setText("0");
+            stopwatch.pause();
             timeTrialEnabled = false;
             System.out.println("THIS IS FOR DEBUGGING PURPOSES: Time Trial Mode disabled.");
         } else {
