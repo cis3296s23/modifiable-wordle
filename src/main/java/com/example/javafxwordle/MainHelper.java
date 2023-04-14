@@ -24,8 +24,6 @@ public class MainHelper {
     private final String[] secondRowLetters = {"A", "S", "D", "F", "G", "H", "J", "K", "L"};
     private final String[] thirdRowLetters = {"↵", "Z", "X", "C", "V", "B", "N", "M", "←"};
 
-    Stopwatch timeTrial= new Stopwatch();
-
     private int CURRENT_ROW = 1;
     private int CURRENT_COLUMN = 1;
     private final int MAX_COLUMN = 5;
@@ -33,8 +31,8 @@ public class MainHelper {
     private String winningWord;
 
     private boolean timeTrialEnabled = false;
-    private Label stopwatchLabel = new Label("0");
-    private Timeline stopwatch = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+    private final Label stopwatchLabel = new Label("0");
+    private final Timeline stopwatch = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
         int seconds = Integer.parseInt(stopwatchLabel.getText()) + 1;
         stopwatchLabel.setText(String.valueOf(seconds));
     }));
@@ -353,11 +351,7 @@ public class MainHelper {
                                 GridPane keyboardRow3) {
         if (CURRENT_ROW <= MAX_ROW && CURRENT_COLUMN == MAX_COLUMN) {
             String guess = getWordFromCurrentRow(gridPane).toLowerCase();
-            if(isValidGuess(guess)){
-                timeTrial.start();
-            }
             if (guess.equals(winningWord)) {
-                timeTrial.stop();
                 updateRowColors(gridPane, CURRENT_ROW);
                 updateKeyboardColors(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
 
@@ -377,7 +371,6 @@ public class MainHelper {
                     }
                     ScoreWindow.display(false, winningWord);
                     if (ScoreWindow.resetGame.get())
-                        timeTrial.reset();
                         resetGame(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
                 }
 
@@ -392,7 +385,6 @@ public class MainHelper {
                 MainApplication.showToast();
             }
             if (ScoreWindow.resetGame.get()) {
-                timeTrial.reset();
                 System.out.println("This line should only print when the game is reset");
                 resetGame(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
                 ScoreWindow.resetGame.set(false);
@@ -404,6 +396,7 @@ public class MainHelper {
 
     public void getRandomWord() {
         winningWord = winningWords.get(new Random().nextInt(winningWords.size()));
+        //winningWord = "debug";
         System.out.println("THIS IS FOR DEBUGGING PURPOSES: " + winningWord);
     }
 
