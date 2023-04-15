@@ -29,6 +29,7 @@ public class MainHelper  {
     protected final int MAX_COLUMN = 5;
     protected final int MAX_ROW = 6;
     protected String winningWord;
+    protected int attempts= 5;
 
     protected boolean timeTrialEnabled = false;
     private final Label stopwatchLabel = new Label("0");
@@ -349,58 +350,16 @@ public class MainHelper  {
 
     void onEnterPressed(GridPane gridPane, GridPane keyboardRow1, GridPane keyboardRow2,
                               GridPane keyboardRow3) {
-/*
-        System.out.println("Enter was pressed");
-        GameMode currentMode = new Normal(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
-        //currentMode.afterEnterPressed(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
-        currentMode.afterEnterPressed();
 
-*/
-        if (CURRENT_ROW <= MAX_ROW && CURRENT_COLUMN == MAX_COLUMN) {
-            String guess = getWordFromCurrentRow(gridPane).toLowerCase();
-            if (guess.equals(winningWord)) {
-                updateRowColors(gridPane, CURRENT_ROW);
-                updateKeyboardColors(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
+        //normalMode(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
 
-                //if(timeTrialEnabled && CURRENT_ROW != 0) {
-                    //stopwatch.pause();
-                //}
+        //allCharsMode(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
 
-                ScoreWindow.display(true, winningWord);
-            } else if (isValidGuess(guess) || !(isValidGuess(guess))) {
-                updateRowColors(gridPane, CURRENT_ROW);
-                updateKeyboardColors(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
-
-                // if this our last guess
-                if (CURRENT_ROW == MAX_ROW) {
-                    if(timeTrialEnabled) {
-                        stopwatch.pause();
-                    }
-                    ScoreWindow.display(false, winningWord);
-                    if (ScoreWindow.resetGame.get())
-                        resetGame(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
-                }
-
-                if(timeTrialEnabled) {
-                    stopwatch.setCycleCount(Animation.INDEFINITE);
-                    stopwatch.play();
-                }
-
-                CURRENT_ROW++;
-                CURRENT_COLUMN = 1;
-            } else {
-                MainApplication.showToast();
-            }
-            if (ScoreWindow.resetGame.get()) {
-                System.out.println("This line should only print when the game is reset");
-                resetGame(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
-                ScoreWindow.resetGame.set(false);
-            }
-            if (ScoreWindow.quitApplication.get())
-                MainApplication.quit();
+        limitedGuesesMode(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
+            
         }
 
-    }
+    
 
     public void getRandomWord() {
         winningWord = winningWords.get(new Random().nextInt(winningWords.size()));
@@ -520,4 +479,166 @@ public class MainHelper  {
         CURRENT_COLUMN++;
     }
 
+
+    public void normalMode(GridPane gridPane, GridPane keyboardRow1, GridPane keyboardRow2,
+                            GridPane keyboardRow3){
+
+        if (CURRENT_ROW <= MAX_ROW && CURRENT_COLUMN == MAX_COLUMN) {
+        
+            String guess = getWordFromCurrentRow(gridPane).toLowerCase();
+            if (guess.equals(winningWord)) {
+                updateRowColors(gridPane, CURRENT_ROW);
+                updateKeyboardColors(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
+
+                if(timeTrialEnabled && CURRENT_ROW != 0) {
+                    stopwatch.pause();
+                }
+                ScoreWindow.display(true, winningWord);
+            } else if (isValidGuess(guess)) {
+                updateRowColors(gridPane, CURRENT_ROW);
+                updateKeyboardColors(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
+
+                // if this our last guess
+                if (CURRENT_ROW == MAX_ROW) {
+                    if(timeTrialEnabled) {
+                        stopwatch.pause();
+                    }
+                    ScoreWindow.display(false, winningWord);
+                    if (ScoreWindow.resetGame.get())
+                        resetGame(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
+                }
+
+                if(timeTrialEnabled) {
+                    stopwatch.setCycleCount(Animation.INDEFINITE);
+                    stopwatch.play();
+                }
+
+                CURRENT_ROW++;
+                CURRENT_COLUMN = 1;
+            
+            } else {
+                MainApplication.showToast();
+            }
+            if (ScoreWindow.resetGame.get()) {
+                resetGame(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
+                ScoreWindow.resetGame.set(false);
+            }
+            if (ScoreWindow.quitApplication.get())
+                MainApplication.quit();
+            }
+    }
+
+    public void allCharsMode(GridPane gridPane, GridPane keyboardRow1, GridPane keyboardRow2,
+                            GridPane keyboardRow3){
+
+        if (CURRENT_ROW <= MAX_ROW && CURRENT_COLUMN == MAX_COLUMN) {
+        
+            String guess = getWordFromCurrentRow(gridPane).toLowerCase();
+            if (guess.equals(winningWord)) {
+                updateRowColors(gridPane, CURRENT_ROW);
+                updateKeyboardColors(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
+
+                if(timeTrialEnabled && CURRENT_ROW != 0) {
+                    stopwatch.pause();
+                }
+                ScoreWindow.display(true, winningWord);
+            } else if (guess.length()==winningWord.length()) {
+                updateRowColors(gridPane, CURRENT_ROW);
+                updateKeyboardColors(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
+
+                // if this our last guess
+                if (CURRENT_ROW == MAX_ROW) {
+                    if(timeTrialEnabled) {
+                        stopwatch.pause();
+                    }
+                    ScoreWindow.display(false, winningWord);
+                    if (ScoreWindow.resetGame.get())
+                        resetGame(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
+                }
+
+                if(timeTrialEnabled) {
+                    stopwatch.setCycleCount(Animation.INDEFINITE);
+                    stopwatch.play();
+                }
+
+                CURRENT_ROW++;
+                CURRENT_COLUMN = 1;
+            
+            } 
+            else {
+                MainApplication.showToast();
+            }
+            if (ScoreWindow.resetGame.get()) {
+                resetGame(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
+                ScoreWindow.resetGame.set(false);
+            }
+            if (ScoreWindow.quitApplication.get())
+                MainApplication.quit();
+            }
+    }
+
+
+    public void limitedGuesesMode(GridPane gridPane, GridPane keyboardRow1, GridPane keyboardRow2,
+                            GridPane keyboardRow3){
+
+        if (CURRENT_ROW <= MAX_ROW && CURRENT_COLUMN == MAX_COLUMN) {
+            if(attempts==0){
+                ScoreWindow.display(false, winningWord);
+            }
+        
+            String guess = getWordFromCurrentRow(gridPane).toLowerCase();
+            if (guess.equals(winningWord)) {
+                updateRowColors(gridPane, CURRENT_ROW);
+                updateKeyboardColors(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
+                attempts= 5;
+
+                if(timeTrialEnabled && CURRENT_ROW != 0) {
+                    stopwatch.pause();
+                }
+                ScoreWindow.display(true, winningWord);
+            } else if (isValidGuess(guess)) {
+                updateRowColors(gridPane, CURRENT_ROW);
+                updateKeyboardColors(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
+                attempts=5;
+
+                // if this our last guess
+                if (CURRENT_ROW == MAX_ROW) {
+                    if(timeTrialEnabled || attempts==0) {
+                        stopwatch.pause();
+                    }
+                    ScoreWindow.display(false, winningWord);
+                    if (ScoreWindow.resetGame.get())
+                        attempts=5;
+                        resetGame(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
+                }
+
+                if(timeTrialEnabled) {
+                    stopwatch.setCycleCount(Animation.INDEFINITE);
+                    stopwatch.play();
+                }
+
+                CURRENT_ROW++;
+                CURRENT_COLUMN = 1;
+            
+            } 
+            else {
+                MainApplication.showToast();
+                attempts--;
+                System.out.println("The number of attempst: " + attempts);
+                if(attempts==0){
+                    ScoreWindow.display(false, winningWord);
+                }
+            }
+            if (ScoreWindow.resetGame.get()) {
+                attempts=5;
+                resetGame(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
+                ScoreWindow.resetGame.set(false);
+            }
+            if (ScoreWindow.quitApplication.get())
+                MainApplication.quit();
+            }
+    }
+
+
+    
 }

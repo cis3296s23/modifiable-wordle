@@ -47,6 +47,7 @@ public class Normal extends MainHelper implements GameMode{
         //getInstance();
         //MainHelper.getInstance();
         //this.gridPane= super.gridPane;
+        
     }
 
 
@@ -56,13 +57,20 @@ public class Normal extends MainHelper implements GameMode{
         System.out.println("The value of current_row, max_row, current_column, and max_column " + CURRENT_ROW + MAX_ROW + CURRENT_COLUMN + MAX_COLUMN);
         System.out.println(super.getCURRENT_ROW());
         System.out.println(super.getCURRENT_COLUMN());
+
+        String guess = getWordFromCurrentRow(gridPane).toLowerCase();
+
+        if(isValidGuess(guess)) {
+            updateRowColors(gridPane, CURRENT_ROW);
+            updateKeyboardColors(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
+        }
     //public void afterEnterPressed(GridPane gridPane, GridPane keyboardRow1, GridPane keyboardRow2, GridPane keyboardRow3){
     //public void onEnterPressed(GridPane gridPane, GridPane keyboardRow1, GridPane keyboardRow2,GridPane keyboardRow3){
             //throws new UnsupportedOperationException("Unimplemented method 'afterEnterPressed'"){ 
         
         // TODO Auto-generated method stub
         //throw new UnsupportedOperationException("Unimplemented method 'afterEnterPressed'");
-
+/*
         if (CURRENT_ROW <= MAX_ROW && CURRENT_COLUMN == MAX_COLUMN) {
             String guess = getWordFromCurrentRow(gridPane).toLowerCase();
             if (guess.equals(winningWord)) {
@@ -106,8 +114,9 @@ public class Normal extends MainHelper implements GameMode{
             if (ScoreWindow.quitApplication.get())
                 MainApplication.quit();
         }
+*/
     }  
-    
+
 }
 
 
