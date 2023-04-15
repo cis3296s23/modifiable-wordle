@@ -79,4 +79,9 @@ public class MainController {
         mainHelper.toggleTimeTrial(extraHBox, stopwatchIcon);
     }
 
+    //@FXML
+    //public void onEnterPressed(){
+        //mainHelper.onEnterPressed(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
+    //}
+
 }

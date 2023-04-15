@@ -16,7 +16,7 @@ import java.util.*;
 import static com.example.javafxwordle.MainApplication.dictionaryWords;
 import static com.example.javafxwordle.MainApplication.winningWords;
 
-public class MainHelper {
+public class MainHelper  {
 
     private static MainHelper INSTANCE = null;
 
@@ -24,20 +24,20 @@ public class MainHelper {
     private final String[] secondRowLetters = {"A", "S", "D", "F", "G", "H", "J", "K", "L"};
     private final String[] thirdRowLetters = {"↵", "Z", "X", "C", "V", "B", "N", "M", "←"};
 
-    private int CURRENT_ROW = 1;
-    private int CURRENT_COLUMN = 1;
-    private final int MAX_COLUMN = 5;
-    private final int MAX_ROW = 6;
-    private String winningWord;
+    protected int CURRENT_ROW = 1;
+    protected int CURRENT_COLUMN = 1;
+    protected final int MAX_COLUMN = 5;
+    protected final int MAX_ROW = 6;
+    protected String winningWord;
 
-    private boolean timeTrialEnabled = false;
+    protected boolean timeTrialEnabled = false;
     private final Label stopwatchLabel = new Label("0");
-    private final Timeline stopwatch = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+    protected final Timeline stopwatch = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
         int seconds = Integer.parseInt(stopwatchLabel.getText()) + 1;
         stopwatchLabel.setText(String.valueOf(seconds));
     }));
 
-    private MainHelper() {
+    protected MainHelper() {
     }
 
     public static MainHelper getInstance() {
@@ -170,7 +170,7 @@ public class MainHelper {
 
         contributors: Marcie Grayson
     */
-    private void updateRowColors(GridPane gridPane, int searchRow) {
+    public void updateRowColors(GridPane gridPane, int searchRow) {
 
         // Using HashMaps to resolve bugs
         HashMap <String, Integer> checkDups = new HashMap<String, Integer>();
@@ -261,7 +261,7 @@ public class MainHelper {
         new SequentialTransition(firstFadeTransition, secondFadeTransition).play();
     }
 
-    private void updateKeyboardColors(GridPane gridPane, GridPane keyboardRow1, GridPane keyboardRow2, GridPane keyboardRow3) {
+    protected void updateKeyboardColors(GridPane gridPane, GridPane keyboardRow1, GridPane keyboardRow2, GridPane keyboardRow3) {
         String currentWord = getWordFromCurrentRow(gridPane).toLowerCase();
         for (int i = 1; i <= MAX_COLUMN; i++) {
             Label keyboardLabel = new Label();
@@ -289,7 +289,7 @@ public class MainHelper {
         }
     }
 
-    private String getWordFromCurrentRow(GridPane gridPane) {
+    protected String getWordFromCurrentRow(GridPane gridPane) {
         StringBuilder input = new StringBuilder();
         for (int j = 1; j <= MAX_COLUMN; j++)
             input.append(getLabelText(gridPane, CURRENT_ROW, j));
@@ -347,20 +347,27 @@ public class MainHelper {
         }
     }
 
-    private void onEnterPressed(GridPane gridPane, GridPane keyboardRow1, GridPane keyboardRow2,
-                                GridPane keyboardRow3) {
+    void onEnterPressed(GridPane gridPane, GridPane keyboardRow1, GridPane keyboardRow2,
+                              GridPane keyboardRow3) {
+/*
+        System.out.println("Enter was pressed");
+        GameMode currentMode = new Normal(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
+        //currentMode.afterEnterPressed(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
+        currentMode.afterEnterPressed();
+
+*/
         if (CURRENT_ROW <= MAX_ROW && CURRENT_COLUMN == MAX_COLUMN) {
             String guess = getWordFromCurrentRow(gridPane).toLowerCase();
             if (guess.equals(winningWord)) {
                 updateRowColors(gridPane, CURRENT_ROW);
                 updateKeyboardColors(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
 
-                if(timeTrialEnabled && CURRENT_ROW != 0) {
-                    stopwatch.pause();
-                }
+                //if(timeTrialEnabled && CURRENT_ROW != 0) {
+                    //stopwatch.pause();
+                //}
 
                 ScoreWindow.display(true, winningWord);
-            } else if (isValidGuess(guess)) {
+            } else if (isValidGuess(guess) || !(isValidGuess(guess))) {
                 updateRowColors(gridPane, CURRENT_ROW);
                 updateKeyboardColors(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
 
@@ -392,6 +399,7 @@ public class MainHelper {
             if (ScoreWindow.quitApplication.get())
                 MainApplication.quit();
         }
+
     }
 
     public void getRandomWord() {
@@ -400,7 +408,7 @@ public class MainHelper {
         System.out.println("THIS IS FOR DEBUGGING PURPOSES: " + winningWord);
     }
 
-    private boolean isValidGuess(String guess) {
+    public boolean isValidGuess(String guess) {
         return binarySearch(winningWords, guess) || binarySearch(dictionaryWords, guess);
     }
 
@@ -493,6 +501,23 @@ public class MainHelper {
             timeTrialEnabled = true;
             System.out.println("THIS IS FOR DEBUGGING PURPOSES: Time Trial Mode enabled.");
         }
+    }
+    public MainHelper returnInstance(){
+        return INSTANCE;
+    } 
+    public int getCURRENT_ROW(){
+        return CURRENT_ROW;
+    }
+
+    public int getCURRENT_COLUMN(){
+        return CURRENT_COLUMN;
+    }
+
+    public void incrementCURRUENT_ROW(){
+        CURRENT_ROW++;
+    }
+    public void incrementCURRUENT_COLUMN(){
+        CURRENT_COLUMN++;
     }
 
 }
