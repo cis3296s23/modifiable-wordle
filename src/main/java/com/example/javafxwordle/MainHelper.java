@@ -178,7 +178,6 @@ public class MainHelper  {
         contributors: Marcie Grayson
     */
     public void updateRowColors(GridPane gridPane, int searchRow) {
-
         // Using HashMaps to resolve bugs
         HashMap <String, Integer> checkDups = new HashMap<String, Integer>();
 
@@ -197,6 +196,19 @@ public class MainHelper  {
 
         for (int i = 1; i <= MAX_COLUMN; i++) {
             Label label = getLabel(gridPane, searchRow, i);
+            if (label != null) {
+                String currentCharacter = String.valueOf(label.getText().charAt(0)).toLowerCase();
+                boolean isCorrectLetter = String.valueOf(winningWord.charAt(i - 1)).toLowerCase().equals(currentCharacter);
+
+                if (isCorrectLetter) {
+                    checkDups.put(currentCharacter, (checkDups.get(currentCharacter) - 1));
+                }
+               
+            }
+        }
+
+        for (int i = 1; i <= MAX_COLUMN; i++) {
+            Label label = getLabel(gridPane, searchRow, i);
             String styleClass;
             if (label != null) {
                 String currentCharacter = String.valueOf(label.getText().charAt(0)).toLowerCase();
@@ -205,17 +217,15 @@ public class MainHelper  {
 
                 if (isCorrectLetter) {
                     styleClass = "correct-letter";
+                    //checkDups.put(currentCharacter, (checkDups.get(currentCharacter) - 1));
                 } else if (isPresentLetter) {
                     styleClass = "present-letter";
                     checkDups.put(currentCharacter, (checkDups.get(currentCharacter) - 1));
                 } else {
                     styleClass = "wrong-letter";
                 }
-                transit(label, styleClass);
 
-                if (isCorrectLetter) {
-                    checkDups.put(currentCharacter, (checkDups.get(currentCharacter) - 1));
-                }
+                transit(label, styleClass);
             }
         }
 
@@ -653,9 +663,10 @@ public class MainHelper  {
                         stopwatch.pause();
                     }
                     ScoreWindow.display(false, winningWord);
-                    if (ScoreWindow.resetGame.get())
-                        attempts=5;
+                    if (ScoreWindow.resetGame.get()) {
+                        attempts = 5;
                         resetGame(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
+                    }
                 }
 
                 if(timeTrialEnabled) {
@@ -669,8 +680,11 @@ public class MainHelper  {
             } 
             else {
                 MainApplication.showToast();
-                attempts--;
-                System.out.println("The number of attempst: " + attempts);
+                //Not sure if we what to count an attempt everything enter is pressed or guess is an 5 char string
+                if (guess.length()==winningWord.length()){
+                    attempts--;
+                }
+                System.out.println("The number of attempts: " + attempts);
                 if(attempts==0){
                     ScoreWindow.display(false, winningWord);
                 }
