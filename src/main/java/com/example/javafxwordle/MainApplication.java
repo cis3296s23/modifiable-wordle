@@ -34,6 +34,9 @@ public class MainApplication extends Application {
         mainController.restartIcon.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/icons8-restart-40.png"))));
         // Icon for Time Trial mode; contributors: Abir, Ato, Kevin, Marcie
         mainController.stopwatchIcon.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/stopwatch.png"))));
+        mainController.alphaIcon.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/alpha.png"))));
+        mainController.betaIcon.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/beta.png"))));
+
 
         double screenWidth = Screen.getPrimary().getBounds().getWidth();
         double screenHeight = Screen.getPrimary().getBounds().getHeight();

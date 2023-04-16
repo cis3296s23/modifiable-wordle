@@ -40,6 +40,18 @@
                 <Pane>
                     <ImageView fx:id="restartIcon" fitHeight="40" fitWidth="40" onMouseClicked="#restart" />
                 </Pane>
+                <Pane>
+                    <padding>
+                        <Insets right="15" />
+                    </padding>
+                    <ImageView fx:id="alphaIcon" fitHeight="32" fitWidth="32" onMouseClicked="#allCharsMode" />
+                </Pane>
+                <Pane>
+                    <padding>
+                        <Insets right="15" />
+                    </padding>
+                    <ImageView fx:id="betaIcon" fitHeight="32" fitWidth="32" onMouseClicked="#limitedGuesesMode" />
+                </Pane>
 
                <padding>
                    <Insets right="35" />

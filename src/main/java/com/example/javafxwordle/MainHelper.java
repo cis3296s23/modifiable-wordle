@@ -32,6 +32,12 @@ public class MainHelper  {
     protected int attempts= 5;
 
     protected boolean timeTrialEnabled = false;
+    protected boolean allChars= false;
+    protected boolean limitGuess= false;
+    protected boolean normal= true;
+
+    protected Label gameModeLabel= new Label("Game Mode");
+    protected Label numAttempts= new Label("Number of Attempts Left: " + attempts);
     private final Label stopwatchLabel = new Label("0");
     protected final Timeline stopwatch = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
         int seconds = Integer.parseInt(stopwatchLabel.getText()) + 1;
@@ -350,12 +356,20 @@ public class MainHelper  {
 
     void onEnterPressed(GridPane gridPane, GridPane keyboardRow1, GridPane keyboardRow2,
                               GridPane keyboardRow3) {
-
+        if (normal && (!allChars) && (!limitGuess)){
+            normalMode(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
+        }
+        else if((!normal) && allChars && (!limitGuess)){
+            allCharsMode(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
+        }
+        else if((!normal) && (!allChars) && limitGuess){
+            limitedGuesesMode(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
+        }
         //normalMode(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
 
         //allCharsMode(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
 
-        limitedGuesesMode(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
+        //limitedGuesesMode(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
             
         }
 
@@ -459,6 +473,38 @@ public class MainHelper  {
             extraHBox.setManaged(true);
             timeTrialEnabled = true;
             System.out.println("THIS IS FOR DEBUGGING PURPOSES: Time Trial Mode enabled.");
+        }
+    }
+
+    public void allChars() {
+        if(allChars) {
+            allChars= false;
+            limitGuess= false;
+            normal=true;
+            System.out.println("All chars mode disable"); 
+        } 
+        else {
+            allChars=true;
+            limitGuess=false;
+            normal=false;
+            System.out.println("All chars mode enable");
+        }
+    }
+
+    public void limitedGueses() {
+        if(limitGuess) {
+            allChars= false;
+            limitGuess= false;
+            normal=true;
+            System.out.println("Limited Guess mode disable");
+            
+        } 
+        else {
+            limitGuess=true;
+            allChars=false;
+            normal=false;
+            System.out.println("Limited Guess mode Enable");
+            attempts=5;
         }
     }
     public MainHelper returnInstance(){

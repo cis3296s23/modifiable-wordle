@@ -29,6 +29,10 @@ public class MainController {
     public HBox extraHBox;
     @FXML
     public ImageView restartIcon;
+    @FXML
+    public ImageView alphaIcon;
+    @FXML
+    public ImageView betaIcon;
 
     public void createUI() {
         createGrid();
@@ -77,6 +81,13 @@ public class MainController {
     // Time Trial Mode; contributors: Abir, Ato, Kevin, Marcie
     public void toggleTimeTrial() {
         mainHelper.toggleTimeTrial(extraHBox, stopwatchIcon);
+    }
+    public void allCharsMode(){
+        mainHelper.allChars();
+    }
+
+    public void limitedGuesesMode(){
+        mainHelper.limitedGueses();
     }
 
     //@FXML
