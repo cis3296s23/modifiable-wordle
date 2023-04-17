@@ -32,6 +32,9 @@ public class MainApplication extends Application {
         mainController.getRandomWord();
         mainController.helpIcon.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/help.png"))));
         mainController.restartIcon.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/icons8-restart-40.png"))));
+
+        mainController.addFileIcon.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/file.png"))));
+
         // Icon for Time Trial mode; contributors: Abir, Ato, Kevin, Marcie
         mainController.stopwatchIcon.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/stopwatch.png"))));
 
@@ -46,7 +49,6 @@ public class MainApplication extends Application {
         stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/icon.png"))));
         stage.setScene(scene);
         stage.show();
-
         mainController.gridRequestFocus();
     }
 
@@ -63,6 +65,7 @@ public class MainApplication extends Application {
     }
 
     public void initializeWordLists() {
+
         InputStream winning_words = getClass().getResourceAsStream("winning-words.txt");
         InputStream dictionary = getClass().getResourceAsStream("dictionary.txt");
 
@@ -73,6 +76,10 @@ public class MainApplication extends Application {
             dictionary_lines.forEach(dictionaryWords::add);
         } else
             quit();
+    }
+
+    public void initialize(){
+
     }
 
 }

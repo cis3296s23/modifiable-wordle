@@ -29,9 +29,18 @@
                     </padding>
                     <ImageView fx:id="stopwatchIcon" fitHeight="32" fitWidth="32" onMouseClicked="#toggleTimeTrial" />
                 </Pane>
+
+                <Pane>
+                    <padding>
+                        <Insets right="7" />
+                    </padding>
+                    <ImageView fx:id="addFileIcon" fitHeight="32" fitWidth="32" onMouseClicked="#showCustomDict" />
+                </Pane>
+
                 <Pane>
                     <ImageView fx:id="helpIcon" fitHeight="32" fitWidth="32" onMouseClicked="#showHelp" />
                 </Pane>
+
                 <HBox fx:id="titleHBox" alignment="CENTER"  prefHeight="50.0" >
                     <padding>
                         <Insets left="27" bottom="8" right="30"/>

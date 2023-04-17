@@ -7,6 +7,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 
+import java.io.IOException;
+
 public class MainController {
 
     private final MainHelper mainHelper = MainHelper.getInstance();
@@ -19,6 +21,9 @@ public class MainController {
     public GridPane keyboardRow2;
     @FXML
     public GridPane keyboardRow3;
+
+    @FXML
+    public  ImageView addFileIcon;
     @FXML
     public ImageView helpIcon;
     @FXML
@@ -78,5 +83,7 @@ public class MainController {
     public void toggleTimeTrial() {
         mainHelper.toggleTimeTrial(extraHBox, stopwatchIcon);
     }
+
+    public void showCustomDict() throws IOException { new CustomDictWindow().display();}
 
 }
