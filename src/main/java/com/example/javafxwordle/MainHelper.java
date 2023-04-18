@@ -1,17 +1,31 @@
 package com.example.javafxwordle;
 
 import javafx.animation.*;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.*;
+import java.util.stream.Stream;
 
 import static com.example.javafxwordle.MainApplication.dictionaryWords;
 import static com.example.javafxwordle.MainApplication.winningWords;
@@ -75,6 +89,43 @@ public class MainHelper {
                 gridPane.add(label, j, i);
             }
         }
+    }
+
+    public void handleCustomDictSubmit(TextField nameTextField){
+        Scene scene = nameTextField.getScene();
+        Stage stage = (Stage) scene.getWindow();
+        String file = nameTextField.getText();
+        System.out.println("Button clicked: " + file);
+        System.out.println("closing stage: ");
+        stage.close();
+        System.out.println("stage closed");
+        System.out.println("changing dictionary words start: ");
+        changeDictionaryWords(file);
+        System.out.println("changing dictionary words done: ");
+    }
+
+    public void changeDictionaryWords(String file){
+        InputStream dictionary = getClass().getResourceAsStream(file);
+        if(dictionary == null){
+            System.out.println("invalid");
+            return;
+        }
+
+        System.out.println("Dictionary words changed");
+        Stream<String> dictionary_lines = new BufferedReader(new InputStreamReader(dictionary)).lines();
+        dictionaryWords.clear();
+        dictionary_lines.forEach(dictionaryWords::add);
+        System.out.println(dictionaryWords);
+    }
+    public void showCustomDict() throws IOException {
+        Stage stage = new Stage();
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.initStyle(StageStyle.UTILITY);
+        stage.setTitle("CUSTOM DICTIONARY");
+        Parent root = FXMLLoader.load(getClass().getResource("customdict-view.fxml"));
+        Scene scene = new Scene(root, 500, 300);
+        stage.setScene(scene);
+        stage.show();
     }
 
     public void createKeyboard(GridPane keyboardRow1, GridPane keyboardRow2, GridPane keyboardRow3) {

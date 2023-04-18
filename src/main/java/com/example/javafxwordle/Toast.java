@@ -39,4 +39,6 @@ public final class Toast {
         fadeTransition.setOnFinished(e -> stage.close());
         fadeTransition.play();
     }
+
+
 }
