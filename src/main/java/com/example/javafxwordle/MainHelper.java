@@ -2,6 +2,7 @@ package com.example.javafxwordle;
 
 import javafx.animation.*;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -9,8 +10,17 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.util.Duration;
+import java.util.Scanner;
 
+import java.io.File;
 import java.util.*;
+import java.util.ArrayList;
+import java.util.Objects;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.stream.Stream;
 
 import static com.example.javafxwordle.MainApplication.dictionaryWords;
 import static com.example.javafxwordle.MainApplication.winningWords;
@@ -28,6 +38,13 @@ public class MainHelper {
     private final int MAX_COLUMN = 5;
     private final int MAX_ROW = 6;
     private String winningWord;
+
+    // Practice Mode Code - Abir
+    private HashMap<Integer, String> map = new HashMap<>();
+    private ArrayList<String> incorrectLetters = new ArrayList<>();
+    private ArrayList<String> validLetters = new ArrayList<>();
+    private ArrayList<String> wordLibrary = new ArrayList<>();
+
 
     private MainHelper() {
     }
@@ -141,6 +158,22 @@ public class MainHelper {
 
     private void updateRowColors(GridPane gridPane, int searchRow) {
 
+        for (String word : wordLibrary) {
+            System.out.println(word);
+        }
+        System.out.println("debugging hello");
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Possible Guesses");
+        alert.setHeaderText("Practice Mode Possible Guesses");
+        for (String word : wordLibrary) {
+            alert.setContentText(word);
+        }
+        alert.show();
+
+        InputStream winning_words = getClass().getResourceAsStream("winning-words.txt");
+        Stream<String> winning_words_lines = new BufferedReader(new InputStreamReader(winning_words)).lines();
+        winning_words_lines.forEach(wordLibrary::add);
+
         for (int i = 1; i <= MAX_COLUMN; i++) {
             Label label = getLabel(gridPane, searchRow, i);
             String styleClass;
@@ -148,11 +181,34 @@ public class MainHelper {
                 String currentCharacter = String.valueOf(label.getText().charAt(0)).toLowerCase();
                 if (String.valueOf(winningWord.charAt(i - 1)).toLowerCase().equals(currentCharacter)) {
                     styleClass = "correct-letter";
+                    // TODO
+                    map.put(i, currentCharacter);
+                    for (String word : wordLibrary) {
+                        String newWord = String.valueOf(word.charAt(i));
+                        if (!newWord.equals(currentCharacter)) {
+                            wordLibrary.remove(word);
+                        }
+                    }
+
                 } else if (winningWord.contains(currentCharacter)) {
                     styleClass = "present-letter";
+                    validLetters.add(currentCharacter);
+                    for (String word : wordLibrary) {
+                        if (!word.contains(currentCharacter)) {
+                            wordLibrary.remove(word);
+                        }
+                    }
                 } else {
                     styleClass = "wrong-letter";
+                    // TODO - take anything with that character out
+                    incorrectLetters.add(currentCharacter);
+                    for (String word : wordLibrary) {
+                        if (word.contains(currentCharacter)) {
+                            wordLibrary.remove(word);
+                        }
+                    }
                 }
+
 
                 FadeTransition firstFadeTransition = new FadeTransition(Duration.millis(300), label);
                 firstFadeTransition.setFromValue(1);
@@ -289,6 +345,7 @@ public class MainHelper {
 
     public void getRandomWord() {
         winningWord = winningWords.get(new Random().nextInt(winningWords.size()));
+        System.out.println(winningWord);
     }
 
     private boolean isValidGuess(String guess) {
