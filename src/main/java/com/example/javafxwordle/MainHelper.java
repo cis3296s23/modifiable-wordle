@@ -204,8 +204,11 @@ public class MainHelper {
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Possible Guesses");
                 alert.setHeaderText("Practice Mode Possible Guesses");
+                String bigString = "";
                 for (String word : wordLibrary) {
-                    alert.setContentText(word);
+                    bigString += word;
+                    bigString += "\n";
+                    alert.setContentText(bigString);
                 }
                 alert.show();
 
