@@ -20,10 +20,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -89,46 +86,6 @@ public class MainHelper {
                 gridPane.add(label, j, i);
             }
         }
-    }
-
-    public void handleCustomDictSubmit(TextField nameTextField){
-        Scene scene = nameTextField.getScene();
-        Stage stage = (Stage) scene.getWindow();
-        String file = nameTextField.getText();
-        System.out.println("Button clicked: " + file);
-        System.out.println("closing stage: ");
-        stage.close();
-        System.out.println("stage closed");
-        System.out.println("changing dictionary words start: ");
-        changeDictionaryWords(nameTextField, file);
-        System.out.println("changing dictionary words done: ");
-    }
-
-    public void changeDictionaryWords(TextField nameTextField, String file){
-        InputStream dictionary = getClass().getResourceAsStream(file);
-        if(dictionary == null){
-            System.out.println("invalid");
-            Scene scene = nameTextField.getScene();
-            Stage stage = (Stage) scene.getWindow();
-            Toast.makeText(stage, "INVALID FILE");
-            return;
-        }
-
-        System.out.println("Dictionary words changed");
-        Stream<String> dictionary_lines = new BufferedReader(new InputStreamReader(dictionary)).lines();
-        dictionaryWords.clear();
-        dictionary_lines.forEach(dictionaryWords::add);
-        System.out.println(dictionaryWords);
-    }
-    public void showCustomDict() throws IOException {
-        Stage stage = new Stage();
-        stage.initModality(Modality.APPLICATION_MODAL);
-        stage.initStyle(StageStyle.UTILITY);
-        stage.setTitle("CUSTOM DICTIONARY");
-        Parent root = FXMLLoader.load(getClass().getResource("customdict-view.fxml"));
-        Scene scene = new Scene(root, 500, 300);
-        stage.setScene(scene);
-        stage.show();
     }
 
     public void createKeyboard(GridPane keyboardRow1, GridPane keyboardRow2, GridPane keyboardRow3) {
@@ -543,6 +500,55 @@ public class MainHelper {
             timeTrialEnabled = true;
             System.out.println("THIS IS FOR DEBUGGING PURPOSES: Time Trial Mode enabled.");
         }
+    }
+
+    public void showCustomDict()  {
+        try{
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.initStyle(StageStyle.UTILITY);
+            stage.setTitle("CUSTOM DICTIONARY");
+            Parent root = FXMLLoader.load(getClass().getResource("customdict-view.fxml"));
+            Scene scene = new Scene(root, 500, 300);
+            stage.setScene(scene);
+            stage.show();
+        }catch(IOException e){
+            System.out.println("IO Exception from showCustomDict()");
+            e.printStackTrace();
+        }
+    }
+    public void handleCustomDictSubmit(TextField nameTextField){
+        Scene scene = nameTextField.getScene();
+        Stage stage = (Stage) scene.getWindow();
+        String file = nameTextField.getText();
+        stage.close();
+        changeDictionaryWords(nameTextField, file);
+    }
+
+    private void changeDictionaryWords(TextField nameTextField, String path) {
+        InputStream dictionary = getClass().getResourceAsStream(path);
+        if(dictionary == null){
+            try{
+                File file = new File(path);
+                if(!file.exists()){
+                    System.out.println("File does not exist");
+                    Scene scene = nameTextField.getScene();
+                    Stage stage = (Stage) scene.getWindow();
+                    Toast.makeText(stage, "INVALID FILE");
+                    return;
+                }
+                else{
+                    dictionary = new FileInputStream(file);
+                }
+            }catch(FileNotFoundException e){
+                System.out.println("FileNotFoundException from changeDictionaryWords()");
+                e.printStackTrace();
+            }
+        }
+        Stream<String> dictionary_lines = new BufferedReader(new InputStreamReader(dictionary)).lines();
+        dictionaryWords.clear();
+        dictionary_lines.forEach(dictionaryWords::add);
+        System.out.println("Dictionary words changed successfully");
     }
 
 }

@@ -87,24 +87,13 @@ public class MainController {
         mainHelper.restart(restartIcon, gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
     }
 
-
-
-
-    public void handleCustomDictSubmit()  {
-        mainHelper.handleCustomDictSubmit(nameTextField);
-    }
-
-    public void showCustomDict() throws IOException{
-        mainHelper.showCustomDict();
-    }
-
-
     // Time Trial Mode; contributors: Abir, Ato, Kevin, Marcie
     public void toggleTimeTrial() {
         mainHelper.toggleTimeTrial(extraHBox, stopwatchIcon);
     }
 
+    public void handleCustomDictSubmit()  { mainHelper.handleCustomDictSubmit(nameTextField); }
 
-
+    public void showCustomDict() { mainHelper.showCustomDict(); }
 
 }
