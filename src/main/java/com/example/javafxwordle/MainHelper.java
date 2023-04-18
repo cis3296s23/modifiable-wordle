@@ -481,6 +481,7 @@ public class MainHelper {
             extraHBox.setVisible(false);
             extraHBox.setManaged(false);
             stopwatchLabel.setText("0");
+            stopwatch.pause();
             timeTrialEnabled = false;
             System.out.println("THIS IS FOR DEBUGGING PURPOSES: Time Trial Mode disabled.");
         } else {
