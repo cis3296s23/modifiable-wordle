@@ -158,18 +158,6 @@ public class MainHelper {
 
     private void updateRowColors(GridPane gridPane, int searchRow) {
 
-        for (String word : wordLibrary) {
-            System.out.println(word);
-        }
-        System.out.println("debugging hello");
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Possible Guesses");
-        alert.setHeaderText("Practice Mode Possible Guesses");
-        for (String word : wordLibrary) {
-            alert.setContentText(word);
-        }
-        alert.show();
-
         InputStream winning_words = getClass().getResourceAsStream("winning-words.txt");
         Stream<String> winning_words_lines = new BufferedReader(new InputStreamReader(winning_words)).lines();
         winning_words_lines.forEach(wordLibrary::add);
@@ -208,6 +196,18 @@ public class MainHelper {
                         }
                     }
                 }
+
+                for (String word : wordLibrary) {
+                    System.out.println(word);
+                }
+                System.out.println("debugging hello");
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Possible Guesses");
+                alert.setHeaderText("Practice Mode Possible Guesses");
+                for (String word : wordLibrary) {
+                    alert.setContentText(word);
+                }
+                alert.show();
 
 
                 FadeTransition firstFadeTransition = new FadeTransition(Duration.millis(300), label);
