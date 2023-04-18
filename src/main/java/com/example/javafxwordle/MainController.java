@@ -15,8 +15,12 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.stream.Stream;
+import static com.example.javafxwordle.MainApplication.dictionaryWords;
 public class MainController {
 
     private final MainHelper mainHelper = MainHelper.getInstance();
@@ -92,69 +96,52 @@ public class MainController {
 
 
     public void showCustomDict() throws IOException {
-
-            Stage stage = new Stage();
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.initStyle(StageStyle.UTILITY);
-            stage.setTitle("CUSTOM DICTIONARY");
-
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("customdict-view.fxml"));
-            Parent root = FXMLLoader.load(getClass().getResource("customdict-view.fxml"));
-
-
-            Scene scene = new Scene(root, 500, 300);
-//        TextField myButton = (TextField) loader.getNamespace().get("nameTextField");
-//
-//        Button button = (Button) loader.getNamespace().get("loginButton");
-//        System.out.println(myButton.getText());
-//
-//
-//        button.setOnAction(event -> {
-//                System.out.println(myButton.getText());
-//            stage.close();
-//        });
-
-            stage.setScene(scene);
-            stage.show();
-
+        Stage stage = new Stage();
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.initStyle(StageStyle.UTILITY);
+        stage.setTitle("CUSTOM DICTIONARY");
+        Parent root = FXMLLoader.load(getClass().getResource("customdict-view.fxml"));
+        Scene scene = new Scene(root, 500, 300);
+        stage.setScene(scene);
+        stage.show();
     }
 
     public void handleSubmit() throws IOException {
-//        FXMLLoader loader = new FXMLLoader(getClass().getResource("customdict-view.fxml"));
-//
-//
-//
-//        TextField myButton = (TextField) loader.getNamespace().get("nameTextField");
-//        Scene scene = myButton.getScene();
-//        Stage stage = (Stage) scene.getWindow();
-//        Button button = (Button) loader.getNamespace().get("loginButton");
-//        System.out.println(myButton.getText());
-//
-//        System.out.println(myButton.getText());
-
-//        button.setOnAction(event -> {
-//                System.out.println(myButton.getText());
-//                System.out.println("closing the stage");
-////                stage.close();
-//        });
-
-
         Scene scene = nameTextField.getScene();
         Stage stage = (Stage) scene.getWindow();
-        System.out.println("Button clicked: " + nameTextField.getText());
+        String file = nameTextField.getText();
+        System.out.println("Button clicked: " + file);
         System.out.println("closing stage: ");
         stage.close();
         System.out.println("stage closed");
+        System.out.println("changing dictionary words start: ");
+
+        changeDictionaryWords(file);
+
+        System.out.println("changing dictionary words done: ");
     }
 
-    public void restartWithCustomDict(){
 
-    }
     // Time Trial Mode; contributors: Abir, Ato, Kevin, Marcie
     public void toggleTimeTrial() {
         mainHelper.toggleTimeTrial(extraHBox, stopwatchIcon);
     }
 
+    public void changeDictionaryWords(String file){
+
+        InputStream dictionary = getClass().getResourceAsStream(file);
+
+        if(dictionary == null){
+            System.out.println("invalid");
+            return;
+        }
+
+        Stream<String> dictionary_lines = new BufferedReader(new InputStreamReader(dictionary)).lines();
+        dictionaryWords.clear();
+        dictionary_lines.forEach(dictionaryWords::add);
+        System.out.println(dictionaryWords);
+
+    }
 
 
 }

@@ -14,7 +14,6 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 public class MainApplication extends Application {
-
     public static final ArrayList<String> winningWords = new ArrayList<>();
     public static final ArrayList<String> dictionaryWords = new ArrayList<>();
 
@@ -77,6 +76,7 @@ public class MainApplication extends Application {
         } else
             quit();
     }
+
 
 
 
