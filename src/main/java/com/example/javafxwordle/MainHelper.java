@@ -100,14 +100,17 @@ public class MainHelper {
         stage.close();
         System.out.println("stage closed");
         System.out.println("changing dictionary words start: ");
-        changeDictionaryWords(file);
+        changeDictionaryWords(nameTextField, file);
         System.out.println("changing dictionary words done: ");
     }
 
-    public void changeDictionaryWords(String file){
+    public void changeDictionaryWords(TextField nameTextField, String file){
         InputStream dictionary = getClass().getResourceAsStream(file);
         if(dictionary == null){
             System.out.println("invalid");
+            Scene scene = nameTextField.getScene();
+            Stage stage = (Stage) scene.getWindow();
+            Toast.makeText(stage, "INVALID FILE");
             return;
         }
 

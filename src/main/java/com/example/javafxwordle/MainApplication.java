@@ -56,7 +56,7 @@ public class MainApplication extends Application {
     }
 
     public static void showToast() {
-        Toast.makeText(stageReference);
+        Toast.makeText(stageReference, "Not in word list");
     }
 
     public static void quit() {
