@@ -44,6 +44,8 @@ public class MainHelper {
     private ArrayList<String> incorrectLetters = new ArrayList<>();
     private ArrayList<String> validLetters = new ArrayList<>();
     private ArrayList<String> wordLibrary = new ArrayList<>();
+    ArrayList<String> wordLib = (ArrayList)winningWords.clone();
+    boolean checkForReset = false;
 
 
     private MainHelper() {
@@ -158,6 +160,16 @@ public class MainHelper {
 
     private void updateRowColors(GridPane gridPane, int searchRow) {
 
+        if (checkForReset == true) {
+            wordLib = (ArrayList)winningWords.clone();
+            checkForReset = false;
+        }
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Possible Guesses");
+        alert.setHeaderText("Practice Mode Possible Guesses");
+        String bigString = "";
+
         InputStream winning_words = getClass().getResourceAsStream("winning-words.txt");
         Stream<String> winning_words_lines = new BufferedReader(new InputStreamReader(winning_words)).lines();
         winning_words_lines.forEach(wordLibrary::add);
@@ -171,46 +183,32 @@ public class MainHelper {
                     styleClass = "correct-letter";
                     // TODO
                     map.put(i, currentCharacter);
-                    for (String word : wordLibrary) {
-                        String newWord = String.valueOf(word.charAt(i));
+                    for (String word : winningWords) {
+                        String newWord = String.valueOf(word.charAt(i - 1));
                         if (!newWord.equals(currentCharacter)) {
-                            wordLibrary.remove(word);
+                            wordLib.remove(word);
                         }
                     }
 
                 } else if (winningWord.contains(currentCharacter)) {
                     styleClass = "present-letter";
                     validLetters.add(currentCharacter);
-                    for (String word : wordLibrary) {
+                    for (String word : winningWords)
                         if (!word.contains(currentCharacter)) {
-                            wordLibrary.remove(word);
+                            wordLib.remove(word);
                         }
-                    }
+
+
                 } else {
                     styleClass = "wrong-letter";
                     // TODO - take anything with that character out
                     incorrectLetters.add(currentCharacter);
-                    for (String word : wordLibrary) {
+                    for (String word : winningWords) {
                         if (word.contains(currentCharacter)) {
-                            wordLibrary.remove(word);
+                            wordLib.remove(word);
                         }
                     }
                 }
-
-                for (String word : wordLibrary) {
-                    System.out.println(word);
-                }
-                System.out.println("debugging hello");
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Possible Guesses");
-                alert.setHeaderText("Practice Mode Possible Guesses");
-                String bigString = "";
-                for (String word : wordLibrary) {
-                    bigString += word;
-                    bigString += "\n";
-                    alert.setContentText(bigString);
-                }
-                alert.show();
 
 
                 FadeTransition firstFadeTransition = new FadeTransition(Duration.millis(300), label);
@@ -228,6 +226,22 @@ public class MainHelper {
                 new SequentialTransition(firstFadeTransition, secondFadeTransition).play();
             }
         }
+
+        int size = wordLib.size();
+        if (size > 4) {
+            for (int j = 0; j < 5; j++) {
+                bigString += wordLib.get(j);
+                bigString += "\n";
+            }
+        } else {
+            for (int k = 0; k < wordLib.size(); k++) {
+                bigString += wordLib.get(k);
+                bigString += "\n";
+            }
+        }
+
+        alert.setContentText(bigString);
+        alert.show();
     }
 
     private void updateKeyboardColors(GridPane gridPane, GridPane keyboardRow1, GridPane keyboardRow2, GridPane keyboardRow3) {
@@ -390,6 +404,7 @@ public class MainHelper {
 
         CURRENT_COLUMN = 1;
         CURRENT_ROW = 1;
+        checkForReset = true;
     }
 
     public void restart(ImageView restartIcon, GridPane gridPane, GridPane keyboardRow1,
