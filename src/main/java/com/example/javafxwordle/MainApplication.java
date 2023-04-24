@@ -40,9 +40,9 @@ public class MainApplication extends Application {
 
         double screenWidth = Screen.getPrimary().getBounds().getWidth();
         double screenHeight = Screen.getPrimary().getBounds().getHeight();
-        Scene scene = new Scene(root, 500, 715);
-        stage.setMinWidth(500);
-        stage.setMinHeight(730);
+        Scene scene = new Scene(root, 650, 825);
+        stage.setMinWidth(650);
+        stage.setMinHeight(825);
         stage.setMaxWidth(screenWidth);
         stage.setMaxHeight(screenHeight);
         stage.setTitle("Modifiable Wordle");

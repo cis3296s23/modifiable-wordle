@@ -8,6 +8,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
 
@@ -36,8 +37,10 @@ public class MainHelper  {
     protected boolean limitGuess= false;
     protected boolean normal= true;
 
-    protected Label gameModeLabel= new Label("Game Mode");
+    protected Label gameModeLabel= new Label("Game Mode: Normal");
     protected Label numAttempts= new Label("Number of Attempts Left: " + attempts);
+    
+    
     private final Label stopwatchLabel = new Label("0");
     protected final Timeline stopwatch = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
         int seconds = Integer.parseInt(stopwatchLabel.getText()) + 1;
@@ -74,6 +77,13 @@ public class MainHelper  {
     public void createExtraHBox(HBox extraHBox) {
         stopwatchLabel.setFont(Font.font("Cambria", 30));
         extraHBox.getChildren().add(stopwatchLabel);
+    }
+
+    public void createExtraVBox(VBox extraVBox){
+        gameModeLabel.setFont(Font.font("Cambria", 30));
+        numAttempts.setFont(Font.font("Cambtia", 20));
+        extraVBox.getChildren().add(gameModeLabel);
+        //extraVBox.getChildren().add(numAttempts);
     }
 
     public void createGrid(GridPane gridPane) {
@@ -495,34 +505,41 @@ public class MainHelper  {
         }
     }
 
-    public void allChars() {
+    public void allChars(VBox extraVBox) {
         if(allChars) {
             allChars= false;
             limitGuess= false;
             normal=true;
             System.out.println("All chars mode disable"); 
+            gameModeLabel.setText("Game Mode: Normal");
+            extraVBox.getChildren().remove(numAttempts);
         } 
         else {
             allChars=true;
             limitGuess=false;
             normal=false;
             System.out.println("All chars mode enable");
+            gameModeLabel.setText("Game Mode: All Characters");
+            extraVBox.getChildren().remove(numAttempts);
         }
     }
 
-    public void limitedGueses() {
+    public void limitedGueses(VBox extraVBox) {
         if(limitGuess) {
             allChars= false;
             limitGuess= false;
             normal=true;
             System.out.println("Limited Guess mode disable");
-            
+            gameModeLabel.setText("Game Mode: Normal");
+            extraVBox.getChildren().remove(numAttempts);
         } 
         else {
             limitGuess=true;
             allChars=false;
             normal=false;
             System.out.println("Limited Guess mode Enable");
+            gameModeLabel.setText("Game Mode: Limited Guesses");
+            extraVBox.getChildren().add(numAttempts);
             attempts=5;
         }
     }
@@ -656,6 +673,7 @@ public class MainHelper  {
                 updateRowColors(gridPane, CURRENT_ROW);
                 updateKeyboardColors(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
                 attempts= 5;
+                numAttempts.setText("Number of Attempts Left: " + attempts);
 
                 if(timeTrialEnabled && CURRENT_ROW != 0) {
                     stopwatch.pause();
@@ -665,6 +683,7 @@ public class MainHelper  {
                 updateRowColors(gridPane, CURRENT_ROW);
                 updateKeyboardColors(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
                 attempts=5;
+                numAttempts.setText("Number of Attempts Left: " + attempts);
 
                 // if this our last guess
                 if (CURRENT_ROW == MAX_ROW) {
@@ -674,6 +693,7 @@ public class MainHelper  {
                     ScoreWindow.display(false, winningWord);
                     if (ScoreWindow.resetGame.get()) {
                         attempts = 5;
+                        numAttempts.setText("Number of Attempts Left: " + attempts);
                         resetGame(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
                     }
                 }
@@ -692,6 +712,7 @@ public class MainHelper  {
                 //Not sure if we what to count an attempt everything enter is pressed or guess is an 5 char string
                 if (guess.length()==winningWord.length()){
                     attempts--;
+                    numAttempts.setText("Number of Attempts Left: " + attempts);
                 }
                 System.out.println("The number of attempts: " + attempts);
                 if(attempts==0){
@@ -700,6 +721,7 @@ public class MainHelper  {
             }
             if (ScoreWindow.resetGame.get()) {
                 attempts=5;
+                numAttempts.setText("Number of Attempts Left: " + attempts);
                 resetGame(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
                 ScoreWindow.resetGame.set(false);
             }
