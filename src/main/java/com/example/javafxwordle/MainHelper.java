@@ -527,6 +527,7 @@ public class MainHelper {
 
     private void changeDictionaryWords(TextField nameTextField, String path) {
         InputStream dictionary = getClass().getResourceAsStream(path);
+
         if(dictionary == null){
             try{
                 File file = new File(path);
@@ -548,6 +549,9 @@ public class MainHelper {
         Stream<String> dictionary_lines = new BufferedReader(new InputStreamReader(dictionary)).lines();
         dictionaryWords.clear();
         dictionary_lines.forEach(dictionaryWords::add);
+        Scene scene = nameTextField.getScene();
+        Stage stage = (Stage) scene.getWindow();
+        Toast.makeText(stage, "DICTIONARY WORDS CHANGED");
         System.out.println("Dictionary words changed successfully");
     }
 

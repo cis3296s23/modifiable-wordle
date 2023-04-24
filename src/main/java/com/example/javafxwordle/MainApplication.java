@@ -64,7 +64,6 @@ public class MainApplication extends Application {
     }
 
     public void initializeWordLists() {
-
         InputStream winning_words = getClass().getResourceAsStream("winning-words.txt");
         InputStream dictionary = getClass().getResourceAsStream("dictionary.txt");
 
@@ -76,8 +75,4 @@ public class MainApplication extends Application {
         } else
             quit();
     }
-
-
-
-
 }
