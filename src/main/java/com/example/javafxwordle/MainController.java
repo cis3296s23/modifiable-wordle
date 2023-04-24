@@ -6,6 +6,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 
 public class MainController {
 
@@ -28,15 +29,23 @@ public class MainController {
     @FXML
     public HBox extraHBox;
     @FXML
+    public VBox extraVBox;
+    @FXML
     public ImageView restartIcon;
+    @FXML
+    public ImageView alphaIcon;
+    @FXML
+    public ImageView betaIcon;
 
     public void createUI() {
         createGrid();
         createKeyboard();
         createTitleHBox();
         createExtraHBox();
+        createExtraVBox();
     }
 
+    
     public void createGrid() {
         mainHelper.createGrid(gridPane);
     }
@@ -70,6 +79,11 @@ public class MainController {
         mainHelper.createExtraHBox(extraHBox);
     }
 
+    private void createExtraVBox() {
+        mainHelper.createExtraVBox(extraVBox);
+    }
+
+
     public void restart() {
         mainHelper.restart(restartIcon, gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
     }
@@ -78,5 +92,17 @@ public class MainController {
     public void toggleTimeTrial() {
         mainHelper.toggleTimeTrial(extraHBox, stopwatchIcon);
     }
+    public void allCharsMode(){
+        mainHelper.allChars(extraVBox);
+    }
+
+    public void limitedGuesesMode(){
+        mainHelper.limitedGueses(extraVBox);
+    }
+
+    //@FXML
+    //public void onEnterPressed(){
+        //mainHelper.onEnterPressed(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
+    //}
 
 }
