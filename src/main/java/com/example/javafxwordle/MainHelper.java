@@ -281,37 +281,7 @@ public class MainHelper  {
     protected void updateKeyboardColors(GridPane gridPane, GridPane keyboardRow1, GridPane keyboardRow2, GridPane keyboardRow3) {
         String currentWord = getWordFromCurrentRow(gridPane).toLowerCase();
         HashSet<String> checkDups = new HashSet<String>();
-       
-        for (int i = 1; i <= MAX_COLUMN; i++) {
-
-            //Label keyboardLabel = new Label();
-            //String styleClass;
-            String currentCharacter = String.valueOf(currentWord.charAt(i - 1));
-            String winningCharacter = String.valueOf(winningWord.charAt(i - 1));
-/*
-            if (contains(firstRowLetters, currentCharacter))
-                keyboardLabel = getLabel(keyboardRow1, currentCharacter);
-            else if (contains(secondRowLetters, currentCharacter))
-                keyboardLabel = getLabel(keyboardRow2, currentCharacter);
-            else if (contains(thirdRowLetters, currentCharacter))
-                keyboardLabel = getLabel(keyboardRow3, currentCharacter);
-*/
-            if (currentCharacter.equals(winningCharacter)){
-                //styleClass = "keyboardCorrectColor";
-                checkDups.add(currentCharacter);
-            }
-            // else if (winningWord.contains("" + currentCharacter) && !(checkDups.contains(currentWord))){
-                //styleClass = "keyboardPresentColor";
-            //} else{
-                //styleClass = "keyboardWrongColor";
-            //}
-
-            //if (keyboardLabel != null) {
-                //keyboardLabel.getStyleClass().clear();
-                //keyboardLabel.getStyleClass().add(styleClass);
-            //}
-
-        }
+   
         for (int i = 1; i <= MAX_COLUMN; i++) {
             Label keyboardLabel = new Label();
             String styleClass;
@@ -326,7 +296,8 @@ public class MainHelper  {
                 keyboardLabel = getLabel(keyboardRow3, currentCharacter);
 
             if (currentCharacter.equals(winningCharacter)){
-                styleClass = "keyboardCorrectColor";   
+                styleClass = "keyboardCorrectColor";  
+                checkDups.add(currentCharacter); 
             } else if (winningWord.contains("" + currentCharacter) && !(checkDups.contains(currentCharacter))){
                 styleClass = "keyboardPresentColor";
             } else {
