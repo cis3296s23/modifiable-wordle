@@ -588,7 +588,7 @@ public class MainHelper  {
                     return;
                 }
                 else{
-                    dictionary = new FileInputStream(file);
+                    dictionary = new FileInputStream(file);  // Possible issue with dictionary here, causing it not to change in practice?
                 }
             }catch(FileNotFoundException e){
                 System.out.println("FileNotFoundException from changeDictionaryWords()");
