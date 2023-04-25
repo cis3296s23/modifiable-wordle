@@ -127,7 +127,6 @@ public class MainController {
     // Hamburger Menu; contributors: Kevin
     public void showMenu() {
         mainHelper.showMenu(menuVBox);
-        System.out.println("Hello");
     }
 
     /*

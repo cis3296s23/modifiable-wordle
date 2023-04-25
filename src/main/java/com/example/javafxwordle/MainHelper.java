@@ -43,10 +43,12 @@ public class MainHelper  {
     protected int attempts= 5;
 
     // New Variables for Game Modes Implementations
-    protected boolean timeTrialEnabled = false;
+    protected boolean timeTrialEnabled= false;
     protected boolean allChars= false;
     protected boolean limitGuess= false;
     protected boolean normal= true;
+
+    protected boolean menuOpen = false;
 
     private final Label stopwatchLabel = new Label("0");
     protected Label gameModeLabel= new Label("Game Mode: Normal");
@@ -821,8 +823,16 @@ public class MainHelper  {
 
     // TESTING
     public void showMenu(VBox menuVBox) {
-        menuVBox.setVisible(true);
-        menuVBox.setManaged(true);
+        if(menuOpen) {
+            menuVBox.setVisible(false);
+            menuVBox.setManaged(false);
+            menuOpen = false;
+        } else {
+            menuVBox.setVisible(true);
+            menuVBox.setManaged(true);
+            menuOpen = true;
+        }
+
     }
     
 }
