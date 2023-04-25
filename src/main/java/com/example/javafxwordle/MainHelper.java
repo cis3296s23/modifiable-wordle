@@ -1,8 +1,13 @@
 package com.example.javafxwordle;
 
 import javafx.animation.*;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -10,9 +15,15 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
+import java.io.*;
 import java.util.*;
+import java.util.stream.Stream;
 
 import static com.example.javafxwordle.MainApplication.dictionaryWords;
 import static com.example.javafxwordle.MainApplication.winningWords;
@@ -465,6 +476,78 @@ public class MainHelper  {
         }
     }
 
+    /*
+        Custom Dictionary : helper methods
+
+        You can specify a filepath to a .txt file or the name of a preset .txt file to change
+        what words can be selected as possible winning words.
+
+        contributors: Ato
+    */
+    public void showCustomDict()  {
+        try{
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.initStyle(StageStyle.UTILITY);
+            stage.setTitle("CUSTOM DICTIONARY");
+            Parent root = FXMLLoader.load(getClass().getResource("customdict-view.fxml"));
+            Scene scene = new Scene(root, 500, 300);
+            stage.setScene(scene);
+            stage.show();
+        }catch(IOException e){
+            System.out.println("IO Exception from showCustomDict()");
+            e.printStackTrace();
+        }
+    }
+    public void handleCustomDictSubmit(TextField nameTextField){
+        Scene scene = nameTextField.getScene();
+        Stage stage = (Stage) scene.getWindow();
+        String file = nameTextField.getText();
+        stage.close();
+        changeDictionaryWords(nameTextField, file);
+    }
+
+    private void changeDictionaryWords(TextField nameTextField, String path) {
+        InputStream dictionary = getClass().getResourceAsStream(path);
+
+        if(dictionary == null){
+            try{
+                File file = new File(path);
+                if(!file.exists()){
+                    System.out.println("File does not exist");
+                    Scene scene = nameTextField.getScene();
+                    Stage stage = (Stage) scene.getWindow();
+                    Toast.makeText(stage, "INVALID FILE");
+                    return;
+                }
+                else{
+                    dictionary = new FileInputStream(file);
+                }
+            }catch(FileNotFoundException e){
+                System.out.println("FileNotFoundException from changeDictionaryWords()");
+                e.printStackTrace();
+            }
+        }
+        Stream<String> dictionary_lines = new BufferedReader(new InputStreamReader(dictionary)).lines();
+        dictionaryWords.clear();
+        dictionary_lines.forEach(dictionaryWords::add);
+        Scene scene = nameTextField.getScene();
+        Stage stage = (Stage) scene.getWindow();
+        Toast.makeText(stage, "DICTIONARY WORDS CHANGED");
+        System.out.println("Dictionary words changed successfully");
+    }
+
+    /*
+        Difficulty Modes : helper methods
+
+        All Characters Accepted mode makes the game easier as you do not have enter a 
+        valid word.
+
+        Limited Guesses Mode accepts invalid words, but will consume a guess without providing
+        any hints.
+
+        contributors: Marcie
+    */
     public void toggleAllChars(VBox extraVBox) {
         if(allChars) {
             allChars= false;
@@ -600,7 +683,6 @@ public class MainHelper  {
             }
     }
 
-
     public void limitedGuessesMode(GridPane gridPane, GridPane keyboardRow1, GridPane keyboardRow2,
                             GridPane keyboardRow3){
 
@@ -670,7 +752,5 @@ public class MainHelper  {
                 MainApplication.quit();
             }
     }
-
-
     
 }
