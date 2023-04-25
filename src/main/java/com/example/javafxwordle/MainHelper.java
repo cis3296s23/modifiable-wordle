@@ -56,7 +56,7 @@ public class MainHelper  {
     private final ArrayList<String> incorrectLetters = new ArrayList<>();
     private final ArrayList<String> validLetters = new ArrayList<>();
     private final ArrayList<String> wordLibrary = new ArrayList<>();
-    ArrayList<String> wordLib = (ArrayList)winningWords.clone();
+    ArrayList wordLib = (ArrayList)winningWords.clone();
     boolean checkForReset = false;
 
     protected final Timeline stopwatch = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
@@ -249,9 +249,10 @@ public class MainHelper  {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Possible Guesses");
         alert.setHeaderText("Practice Mode Possible Guesses");
-        String bigString = "";
+        StringBuilder bigString = new StringBuilder();
 
         InputStream winning_words = getClass().getResourceAsStream("winning-words.txt");
+        assert winning_words != null;
         Stream<String> winning_words_lines = new BufferedReader(new InputStreamReader(winning_words)).lines();
         winning_words_lines.forEach(wordLibrary::add);
 
@@ -297,17 +298,17 @@ public class MainHelper  {
         int size = wordLib.size();
         if (size > 4) {
             for (int j = 0; j < 5; j++) {
-                bigString += wordLib.get(j);
-                bigString += "\n";
+                bigString.append(wordLib.get(j));
+                bigString.append("\n");
             }
         } else {
-            for (int k = 0; k < wordLib.size(); k++) {
-                bigString += wordLib.get(k);
-                bigString += "\n";
+            for (Object s : wordLib) {
+                bigString.append(s);
+                bigString.append("\n");
             }
         }
 
-        alert.setContentText(bigString);
+        alert.setContentText(bigString.toString());
         alert.show();
     }
 
