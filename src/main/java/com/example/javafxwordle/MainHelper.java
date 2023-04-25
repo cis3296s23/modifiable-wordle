@@ -1,22 +1,33 @@
 package com.example.javafxwordle;
 
 import javafx.animation.*;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
+import java.io.*;
 import java.util.*;
+import java.util.stream.Stream;
 
 import static com.example.javafxwordle.MainApplication.dictionaryWords;
 import static com.example.javafxwordle.MainApplication.winningWords;
 
-public class MainHelper {
+public class MainHelper  {
 
     private static MainHelper INSTANCE = null;
 
@@ -24,20 +35,36 @@ public class MainHelper {
     private final String[] secondRowLetters = {"A", "S", "D", "F", "G", "H", "J", "K", "L"};
     private final String[] thirdRowLetters = {"↵", "Z", "X", "C", "V", "B", "N", "M", "←"};
 
-    private int CURRENT_ROW = 1;
-    private int CURRENT_COLUMN = 1;
-    private final int MAX_COLUMN = 5;
-    private final int MAX_ROW = 6;
-    private String winningWord;
+    protected int CURRENT_ROW = 1;
+    protected int CURRENT_COLUMN = 1;
+    protected final int MAX_COLUMN = 5;
+    protected final int MAX_ROW = 6;
+    protected String winningWord;
+    protected int attempts= 5;
 
-    private boolean timeTrialEnabled = false;
+    // New Variables for Game Modes Implementations
+    protected boolean timeTrialEnabled = false;
+    protected boolean allChars= false;
+    protected boolean limitGuess= false;
+    protected boolean normal= true;
+
     private final Label stopwatchLabel = new Label("0");
-    private final Timeline stopwatch = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+    protected Label gameModeLabel= new Label("Game Mode: Normal");
+    protected Label numAttempts= new Label("Number of Attempts Left: " + attempts);
+
+    private final HashMap<Integer, String> map = new HashMap<>();
+    private final ArrayList<String> incorrectLetters = new ArrayList<>();
+    private final ArrayList<String> validLetters = new ArrayList<>();
+    private final ArrayList<String> wordLibrary = new ArrayList<>();
+    ArrayList<String> wordLib = (ArrayList)winningWords.clone();
+    boolean checkForReset = false;
+
+    protected final Timeline stopwatch = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
         int seconds = Integer.parseInt(stopwatchLabel.getText()) + 1;
         stopwatchLabel.setText(String.valueOf(seconds));
     }));
 
-    private MainHelper() {
+    protected MainHelper() {
     }
 
     public static MainHelper getInstance() {
@@ -67,6 +94,13 @@ public class MainHelper {
     public void createExtraHBox(HBox extraHBox) {
         stopwatchLabel.setFont(Font.font("Cambria", 30));
         extraHBox.getChildren().add(stopwatchLabel);
+    }
+
+    public void createExtraVBox(VBox extraVBox){
+        gameModeLabel.setFont(Font.font("Cambria", 30));
+        numAttempts.setFont(Font.font("Cambtia", 20));
+        extraVBox.getChildren().add(gameModeLabel);
+        //extraVBox.getChildren().add(numAttempts);
     }
 
     public void createGrid(GridPane gridPane) {
@@ -169,11 +203,17 @@ public class MainHelper {
             Only the first A in the 2nd position will highlight yellow.
 
         contributors: Marcie Grayson
-    */
-    private void updateRowColors(GridPane gridPane, int searchRow) {
 
+        ------------------------------------------------
+
+        This method is also where the bulk of Practice Mode is implemented. We add eligible words to a
+        map.
+
+        contributors: Abir Islam
+    */
+    public void updateRowColors(GridPane gridPane, int searchRow) {
         // Using HashMaps to resolve bugs
-        HashMap <String, Integer> checkDups = new HashMap<String, Integer>();
+        HashMap <String, Integer> checkDups = new HashMap<>();
 
         int count=1;
         for(int i=0; i< winningWord.length(); i++){
@@ -190,6 +230,33 @@ public class MainHelper {
 
         for (int i = 1; i <= MAX_COLUMN; i++) {
             Label label = getLabel(gridPane, searchRow, i);
+            if (label != null) {
+                String currentCharacter = String.valueOf(label.getText().charAt(0)).toLowerCase();
+                boolean isCorrectLetter = String.valueOf(winningWord.charAt(i - 1)).toLowerCase().equals(currentCharacter);
+
+                if (isCorrectLetter) {
+                    checkDups.put(currentCharacter, (checkDups.get(currentCharacter) - 1));
+                }
+               
+            }
+        }
+
+        if (checkForReset) {
+            wordLib = (ArrayList)winningWords.clone();
+            checkForReset = false;
+        }
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Possible Guesses");
+        alert.setHeaderText("Practice Mode Possible Guesses");
+        String bigString = "";
+
+        InputStream winning_words = getClass().getResourceAsStream("winning-words.txt");
+        Stream<String> winning_words_lines = new BufferedReader(new InputStreamReader(winning_words)).lines();
+        winning_words_lines.forEach(wordLibrary::add);
+
+        for (int i = 1; i <= MAX_COLUMN; i++) {
+            Label label = getLabel(gridPane, searchRow, i);
             String styleClass;
             if (label != null) {
                 String currentCharacter = String.valueOf(label.getText().charAt(0)).toLowerCase();
@@ -198,51 +265,50 @@ public class MainHelper {
 
                 if (isCorrectLetter) {
                     styleClass = "correct-letter";
+                    map.put(i, currentCharacter);
+                    for (String word : winningWords) {
+                        String newWord = String.valueOf(word.charAt(i - 1));
+                        if (!newWord.equals(currentCharacter)) {
+                            wordLib.remove(word);
+                        }
+                    }
                 } else if (isPresentLetter) {
                     styleClass = "present-letter";
                     checkDups.put(currentCharacter, (checkDups.get(currentCharacter) - 1));
+                    validLetters.add(currentCharacter);
+                    for (String word : winningWords)
+                        if (!word.contains(currentCharacter)) {
+                            wordLib.remove(word);
+                        }
                 } else {
                     styleClass = "wrong-letter";
+                    incorrectLetters.add(currentCharacter);
+                    for (String word : winningWords) {
+                        if (word.contains(currentCharacter)) {
+                            wordLib.remove(word);
+                        }
+                    }
                 }
+
                 transit(label, styleClass);
-
-                if (isCorrectLetter) {
-                    checkDups.put(currentCharacter, (checkDups.get(currentCharacter) - 1));
-                }
             }
         }
 
-        /*
-        // OLD IMPLEMENTATION
-        for (int i = 1; i <= MAX_COLUMN; i++) {
-            Label label = getLabel(gridPane, searchRow, i);
-            String styleClass;
-            if (label != null) {
-                String currentCharacter = String.valueOf(label.getText().charAt(0)).toLowerCase();
-                if (String.valueOf(winningWord.charAt(i - 1)).toLowerCase().equals(currentCharacter)) {
-                    styleClass = "correct-letter";
-                } else if (winningWord.contains(currentCharacter)) {
-                    styleClass = "present-letter";
-                } else {
-                    styleClass = "wrong-letter";
-                }
-
-                FadeTransition firstFadeTransition = new FadeTransition(Duration.millis(300), label);
-                firstFadeTransition.setFromValue(1);
-                firstFadeTransition.setToValue(0.2);
-                firstFadeTransition.setOnFinished(e -> {
-                    label.getStyleClass().clear();
-                    label.getStyleClass().setAll(styleClass);
-                });
-
-                FadeTransition secondFadeTransition = new FadeTransition(Duration.millis(300), label);
-                secondFadeTransition.setFromValue(0.2);
-                secondFadeTransition.setToValue(1);
-
-                new SequentialTransition(firstFadeTransition, secondFadeTransition).play();
+        int size = wordLib.size();
+        if (size > 4) {
+            for (int j = 0; j < 5; j++) {
+                bigString += wordLib.get(j);
+                bigString += "\n";
+            }
+        } else {
+            for (int k = 0; k < wordLib.size(); k++) {
+                bigString += wordLib.get(k);
+                bigString += "\n";
             }
         }
-        */
+
+        alert.setContentText(bigString);
+        alert.show();
     }
 
     private void transit(Label label, String styleClass ){
@@ -261,8 +327,10 @@ public class MainHelper {
         new SequentialTransition(firstFadeTransition, secondFadeTransition).play();
     }
 
-    private void updateKeyboardColors(GridPane gridPane, GridPane keyboardRow1, GridPane keyboardRow2, GridPane keyboardRow3) {
+    protected void updateKeyboardColors(GridPane gridPane, GridPane keyboardRow1, GridPane keyboardRow2, GridPane keyboardRow3) {
         String currentWord = getWordFromCurrentRow(gridPane).toLowerCase();
+        HashSet<String> checkDups = new HashSet<>();
+   
         for (int i = 1; i <= MAX_COLUMN; i++) {
             Label keyboardLabel = new Label();
             String styleClass;
@@ -276,20 +344,27 @@ public class MainHelper {
             else if (contains(thirdRowLetters, currentCharacter))
                 keyboardLabel = getLabel(keyboardRow3, currentCharacter);
 
-            if (currentCharacter.equals(winningCharacter))
-                styleClass = "keyboardCorrectColor";
-            else if (winningWord.contains("" + currentCharacter))
+            if (currentCharacter.equals(winningCharacter)){
+                styleClass = "keyboardCorrectColor";  
+                checkDups.add(currentCharacter); 
+            } else if (winningWord.contains("" + currentCharacter) && !(checkDups.contains(currentCharacter))){
                 styleClass = "keyboardPresentColor";
-            else
+            } else {
                 styleClass = "keyboardWrongColor";
+                if(checkDups.contains(currentCharacter)){
+                    styleClass = "keyboardCorrectColor"; 
+                }
+            }
+
             if (keyboardLabel != null) {
                 keyboardLabel.getStyleClass().clear();
                 keyboardLabel.getStyleClass().add(styleClass);
             }
+
         }
     }
 
-    private String getWordFromCurrentRow(GridPane gridPane) {
+    protected String getWordFromCurrentRow(GridPane gridPane) {
         StringBuilder input = new StringBuilder();
         for (int j = 1; j <= MAX_COLUMN; j++)
             input.append(getLabelText(gridPane, CURRENT_ROW, j));
@@ -347,51 +422,18 @@ public class MainHelper {
         }
     }
 
-    private void onEnterPressed(GridPane gridPane, GridPane keyboardRow1, GridPane keyboardRow2,
-                                GridPane keyboardRow3) {
-        if (CURRENT_ROW <= MAX_ROW && CURRENT_COLUMN == MAX_COLUMN) {
-            String guess = getWordFromCurrentRow(gridPane).toLowerCase();
-            if (guess.equals(winningWord)) {
-                updateRowColors(gridPane, CURRENT_ROW);
-                updateKeyboardColors(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
-
-                if(timeTrialEnabled && CURRENT_ROW != 0) {
-                    stopwatch.pause();
-                }
-
-                ScoreWindow.display(true, winningWord);
-            } else if (isValidGuess(guess)) {
-                updateRowColors(gridPane, CURRENT_ROW);
-                updateKeyboardColors(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
-
-                // if this our last guess
-                if (CURRENT_ROW == MAX_ROW) {
-                    if(timeTrialEnabled) {
-                        stopwatch.pause();
-                    }
-                    ScoreWindow.display(false, winningWord);
-                    if (ScoreWindow.resetGame.get())
-                        resetGame(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
-                }
-
-                if(timeTrialEnabled) {
-                    stopwatch.setCycleCount(Animation.INDEFINITE);
-                    stopwatch.play();
-                }
-
-                CURRENT_ROW++;
-                CURRENT_COLUMN = 1;
-            } else {
-                MainApplication.showToast();
-            }
-            if (ScoreWindow.resetGame.get()) {
-                System.out.println("This line should only print when the game is reset");
-                resetGame(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
-                ScoreWindow.resetGame.set(false);
-            }
-            if (ScoreWindow.quitApplication.get())
-                MainApplication.quit();
+    void onEnterPressed(GridPane gridPane, GridPane keyboardRow1, GridPane keyboardRow2,
+                              GridPane keyboardRow3) {
+        if (normal && (!allChars) && (!limitGuess)){
+            normalMode(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
         }
+        else if((!normal) && allChars && (!limitGuess)){
+            allCharsMode(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
+        }
+        else if((!normal) && (!allChars) && limitGuess){
+            limitedGuessesMode(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
+        }
+            
     }
 
     public void getRandomWord() {
@@ -400,7 +442,7 @@ public class MainHelper {
         System.out.println("THIS IS FOR DEBUGGING PURPOSES: " + winningWord);
     }
 
-    private boolean isValidGuess(String guess) {
+    public boolean isValidGuess(String guess) {
         return binarySearch(winningWords, guess) || binarySearch(dictionaryWords, guess);
     }
 
@@ -439,6 +481,7 @@ public class MainHelper {
 
         CURRENT_COLUMN = 1;
         CURRENT_ROW = 1;
+        checkForReset = true;
     }
 
     public void restart(ImageView restartIcon, GridPane gridPane, GridPane keyboardRow1,
@@ -498,4 +541,282 @@ public class MainHelper {
         }
     }
 
+    /*
+        Custom Dictionary : helper methods
+
+        You can specify a filepath to a .txt file or the name of a preset .txt file to change
+        what words can be selected as possible winning words.
+
+        contributors: Ato
+    */
+    public void showCustomDict()  {
+        try{
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.initStyle(StageStyle.UTILITY);
+            stage.setTitle("CUSTOM DICTIONARY");
+            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("customdict-view.fxml")));
+            Scene scene = new Scene(root, 500, 300);
+            stage.setScene(scene);
+            stage.show();
+        }catch(IOException e){
+            System.out.println("IO Exception from showCustomDict()");
+            e.printStackTrace();
+        }
+    }
+    public void handleCustomDictSubmit(TextField nameTextField){
+        Scene scene = nameTextField.getScene();
+        Stage stage = (Stage) scene.getWindow();
+        String file = nameTextField.getText();
+        stage.close();
+        changeDictionaryWords(nameTextField, file);
+    }
+
+    private void changeDictionaryWords(TextField nameTextField, String path) {
+        InputStream dictionary = getClass().getResourceAsStream(path);
+
+        if(dictionary == null){
+            try{
+                File file = new File(path);
+                if(!file.exists()){
+                    System.out.println("File does not exist");
+                    Scene scene = nameTextField.getScene();
+                    Stage stage = (Stage) scene.getWindow();
+                    Toast.makeText(stage, "INVALID FILE");
+                    return;
+                }
+                else{
+                    dictionary = new FileInputStream(file);
+                }
+            }catch(FileNotFoundException e){
+                System.out.println("FileNotFoundException from changeDictionaryWords()");
+                e.printStackTrace();
+            }
+        }
+        assert dictionary != null;
+        Stream<String> dictionary_lines = new BufferedReader(new InputStreamReader(dictionary)).lines();
+        dictionaryWords.clear();
+        dictionary_lines.forEach(dictionaryWords::add);
+        Scene scene = nameTextField.getScene();
+        Stage stage = (Stage) scene.getWindow();
+        Toast.makeText(stage, "DICTIONARY WORDS CHANGED");
+        System.out.println("THIS IS FOR DEBUGGING PURPOSES: Dictionary words changed successfully.");
+    }
+
+    /*
+        Difficulty Modes : helper methods
+
+        All Characters Accepted mode makes the game easier as you do not have enter a 
+        valid word.
+
+        Limited Guesses Mode accepts invalid words, but will consume a guess without providing
+        any hints.
+
+        contributors: Marcie
+    */
+    public void toggleAllChars(VBox extraVBox) {
+        if(allChars) {
+            allChars= false;
+            limitGuess= false;
+            normal=true;
+            System.out.println("THIS IS FOR DEBUGGING PURPOSES: All Characters Mode disabled.");
+            gameModeLabel.setText("Game Mode: Normal");
+        }
+        else {
+            allChars=true;
+            limitGuess=false;
+            normal=false;
+            System.out.println("THIS IS FOR DEBUGGING PURPOSES: All Characters Mode enabled.");
+            gameModeLabel.setText("Game Mode: All Characters");
+        }
+        extraVBox.getChildren().remove(numAttempts);
+    }
+
+    public void toggleLimitedGuesses(VBox extraVBox) {
+        if(limitGuess) {
+            allChars= false;
+            limitGuess= false;
+            normal=true;
+            System.out.println("THIS IS FOR DEBUGGING PURPOSES: Limited Guesses Mode disabled.");
+            gameModeLabel.setText("Game Mode: Normal");
+            extraVBox.getChildren().remove(numAttempts);
+        } 
+        else {
+            limitGuess=true;
+            allChars=false;
+            normal=false;
+            System.out.println("THIS IS FOR DEBUGGING PURPOSES: Limited Guesses Mode enabled.");
+            gameModeLabel.setText("Game Mode: Limited Guesses");
+            extraVBox.getChildren().add(numAttempts);
+            attempts=5;
+        }
+    }
+
+    public void normalMode(GridPane gridPane, GridPane keyboardRow1, GridPane keyboardRow2,
+                            GridPane keyboardRow3){
+
+        if (CURRENT_ROW <= MAX_ROW && CURRENT_COLUMN == MAX_COLUMN) {
+        
+            String guess = getWordFromCurrentRow(gridPane).toLowerCase();
+            if (guess.equals(winningWord)) {
+                updateRowColors(gridPane, CURRENT_ROW);
+                updateKeyboardColors(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
+
+                if(timeTrialEnabled && CURRENT_ROW != 0) {
+                    stopwatch.pause();
+                }
+                ScoreWindow.display(true, winningWord);
+            } else if (isValidGuess(guess)) {
+                updateRowColors(gridPane, CURRENT_ROW);
+                updateKeyboardColors(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
+
+                // if this our last guess
+                if (CURRENT_ROW == MAX_ROW) {
+                    if(timeTrialEnabled) {
+                        stopwatch.pause();
+                    }
+                    ScoreWindow.display(false, winningWord);
+                    if (ScoreWindow.resetGame.get())
+                        resetGame(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
+                }
+
+                if(timeTrialEnabled) {
+                    stopwatch.setCycleCount(Animation.INDEFINITE);
+                    stopwatch.play();
+                }
+
+                CURRENT_ROW++;
+                CURRENT_COLUMN = 1;
+            
+            } else {
+                MainApplication.showToast();
+            }
+            if (ScoreWindow.resetGame.get()) {
+                resetGame(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
+                ScoreWindow.resetGame.set(false);
+            }
+            if (ScoreWindow.quitApplication.get())
+                MainApplication.quit();
+            }
+    }
+
+    public void allCharsMode(GridPane gridPane, GridPane keyboardRow1, GridPane keyboardRow2,
+                            GridPane keyboardRow3){
+
+        if (CURRENT_ROW <= MAX_ROW && CURRENT_COLUMN == MAX_COLUMN) {
+        
+            String guess = getWordFromCurrentRow(gridPane).toLowerCase();
+            if (guess.equals(winningWord)) {
+                updateRowColors(gridPane, CURRENT_ROW);
+                updateKeyboardColors(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
+
+                if(timeTrialEnabled && CURRENT_ROW != 0) {
+                    stopwatch.pause();
+                }
+                ScoreWindow.display(true, winningWord);
+            } else if (guess.length()==winningWord.length()) {
+                updateRowColors(gridPane, CURRENT_ROW);
+                updateKeyboardColors(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
+
+                // if this our last guess
+                if (CURRENT_ROW == MAX_ROW) {
+                    if(timeTrialEnabled) {
+                        stopwatch.pause();
+                    }
+                    ScoreWindow.display(false, winningWord);
+                    if (ScoreWindow.resetGame.get())
+                        resetGame(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
+                }
+
+                if(timeTrialEnabled) {
+                    stopwatch.setCycleCount(Animation.INDEFINITE);
+                    stopwatch.play();
+                }
+
+                CURRENT_ROW++;
+                CURRENT_COLUMN = 1;
+            
+            } 
+            else {
+                MainApplication.showToast();
+            }
+            if (ScoreWindow.resetGame.get()) {
+                resetGame(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
+                ScoreWindow.resetGame.set(false);
+            }
+            if (ScoreWindow.quitApplication.get())
+                MainApplication.quit();
+            }
+    }
+
+    public void limitedGuessesMode(GridPane gridPane, GridPane keyboardRow1, GridPane keyboardRow2,
+                            GridPane keyboardRow3){
+
+        if (CURRENT_ROW <= MAX_ROW && CURRENT_COLUMN == MAX_COLUMN) {
+            if(attempts==0){
+                ScoreWindow.display(false, winningWord);
+            }
+        
+            String guess = getWordFromCurrentRow(gridPane).toLowerCase();
+            if (guess.equals(winningWord)) {
+                updateRowColors(gridPane, CURRENT_ROW);
+                updateKeyboardColors(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
+                attempts= 5;
+                numAttempts.setText("Number of Attempts Left: " + attempts);
+
+                if(timeTrialEnabled && CURRENT_ROW != 0) {
+                    stopwatch.pause();
+                }
+                ScoreWindow.display(true, winningWord);
+            } else if (isValidGuess(guess)) {
+                updateRowColors(gridPane, CURRENT_ROW);
+                updateKeyboardColors(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
+                attempts=5;
+                numAttempts.setText("Number of Attempts Left: " + attempts);
+
+                // if this our last guess
+                if (CURRENT_ROW == MAX_ROW) {
+                    if(timeTrialEnabled || attempts==0) {
+                        stopwatch.pause();
+                    }
+                    ScoreWindow.display(false, winningWord);
+                    if (ScoreWindow.resetGame.get()) {
+                        attempts = 5;
+                        numAttempts.setText("Number of Attempts Left: " + attempts);
+                        resetGame(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
+                    }
+                }
+
+                if(timeTrialEnabled) {
+                    stopwatch.setCycleCount(Animation.INDEFINITE);
+                    stopwatch.play();
+                }
+
+                CURRENT_ROW++;
+                CURRENT_COLUMN = 1;
+            
+            } 
+            else {
+                MainApplication.showToast();
+                //Not sure if we what to count an attempt everything enter is pressed or guess is an 5 char string
+                if (guess.length()==winningWord.length()){
+                    attempts--;
+                    numAttempts.setText("Number of Attempts Left: " + attempts);
+                }
+                System.out.println("The number of attempts: " + attempts);
+                if(attempts==0){
+                    ScoreWindow.display(false, winningWord);
+                }
+            }
+            if (ScoreWindow.resetGame.get()) {
+                attempts=5;
+                numAttempts.setText("Number of Attempts Left: " + attempts);
+                resetGame(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
+                ScoreWindow.resetGame.set(false);
+            }
+            if (ScoreWindow.quitApplication.get())
+                MainApplication.quit();
+            }
+    }
+    
 }
