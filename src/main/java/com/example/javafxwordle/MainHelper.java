@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -490,7 +491,7 @@ public class MainHelper  {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.initStyle(StageStyle.UTILITY);
             stage.setTitle("CUSTOM DICTIONARY");
-            Parent root = FXMLLoader.load(getClass().getResource("customdict-view.fxml"));
+            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("customdict-view.fxml")));
             Scene scene = new Scene(root, 500, 300);
             stage.setScene(scene);
             stage.show();
@@ -528,13 +529,14 @@ public class MainHelper  {
                 e.printStackTrace();
             }
         }
+        assert dictionary != null;
         Stream<String> dictionary_lines = new BufferedReader(new InputStreamReader(dictionary)).lines();
         dictionaryWords.clear();
         dictionary_lines.forEach(dictionaryWords::add);
         Scene scene = nameTextField.getScene();
         Stage stage = (Stage) scene.getWindow();
         Toast.makeText(stage, "DICTIONARY WORDS CHANGED");
-        System.out.println("Dictionary words changed successfully");
+        System.out.println("THIS IS FOR DEBUGGING PURPOSES: Dictionary words changed successfully.");
     }
 
     /*
