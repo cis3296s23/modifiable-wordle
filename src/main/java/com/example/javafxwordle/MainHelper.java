@@ -597,10 +597,12 @@ public class MainHelper  {
         }
         assert dictionary != null;
         Stream<String> dictionary_lines = new BufferedReader(new InputStreamReader(dictionary)).lines();
-        dictionaryWords.clear();
-        dictionary_lines.forEach(dictionaryWords::add);
+        winningWords.clear();
+        dictionary_lines.forEach(winningWords::add);
+        System.out.println(dictionary_lines);
         Scene scene = nameTextField.getScene();
         Stage stage = (Stage) scene.getWindow();
+
         Toast.makeText(stage, "DICTIONARY WORDS CHANGED");
         System.out.println("THIS IS FOR DEBUGGING PURPOSES: Dictionary words changed successfully.");
     }
