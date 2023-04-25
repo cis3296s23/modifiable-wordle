@@ -491,6 +491,8 @@ public class MainHelper  {
         rotateTransition.setToAngle(360);
         rotateTransition.setOnFinished(ae -> resetGame(gridPane, keyboardRow1, keyboardRow2, keyboardRow3));
         rotateTransition.play();
+        stopwatchLabel.setText("0");
+        stopwatch.pause();
     }
 
     private boolean binarySearch(ArrayList<String> list, String string) {
@@ -528,6 +530,7 @@ public class MainHelper  {
             extraHBox.setVisible(false);
             extraHBox.setManaged(false);
             stopwatchLabel.setText("0");
+            stopwatch.pause();
             timeTrialEnabled = false;
             System.out.println("THIS IS FOR DEBUGGING PURPOSES: Time Trial Mode disabled.");
         } else {

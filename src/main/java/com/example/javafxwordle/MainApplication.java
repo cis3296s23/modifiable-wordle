@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Random;
 import java.util.stream.Stream;
 
 public class MainApplication extends Application {
@@ -82,4 +83,14 @@ public class MainApplication extends Application {
         } else
             quit();
     }
+
+    /*
+    Methods created so JUnit testing can be performed.
+
+    contributors: Kevin
+    */
+    public String getRandomWord() {
+        return winningWords.get(new Random().nextInt(winningWords.size()));
+    }
+
 }
