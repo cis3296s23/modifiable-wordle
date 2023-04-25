@@ -8,7 +8,10 @@ import javafx.scene.image.Image;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -40,7 +43,6 @@ public class MainApplication extends Application {
         // Icon for Difficulty modes; contributors: Marcie
         mainController.alphaIcon.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/alpha.png"))));
         mainController.betaIcon.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/beta.png"))));
-
 
         double screenWidth = Screen.getPrimary().getBounds().getWidth();
         double screenHeight = Screen.getPrimary().getBounds().getHeight();

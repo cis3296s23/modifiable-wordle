@@ -5,10 +5,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -16,7 +15,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -44,16 +42,23 @@ public class MainHelper  {
     protected String winningWord;
     protected int attempts= 5;
 
+    // New Variables for Game Modes Implementations
     protected boolean timeTrialEnabled = false;
     protected boolean allChars= false;
     protected boolean limitGuess= false;
     protected boolean normal= true;
 
+    private final Label stopwatchLabel = new Label("0");
     protected Label gameModeLabel= new Label("Game Mode: Normal");
     protected Label numAttempts= new Label("Number of Attempts Left: " + attempts);
-    
-    
-    private final Label stopwatchLabel = new Label("0");
+
+    private final HashMap<Integer, String> map = new HashMap<>();
+    private final ArrayList<String> incorrectLetters = new ArrayList<>();
+    private final ArrayList<String> validLetters = new ArrayList<>();
+    private final ArrayList<String> wordLibrary = new ArrayList<>();
+    ArrayList<String> wordLib = (ArrayList)winningWords.clone();
+    boolean checkForReset = false;
+
     protected final Timeline stopwatch = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
         int seconds = Integer.parseInt(stopwatchLabel.getText()) + 1;
         stopwatchLabel.setText(String.valueOf(seconds));
@@ -198,6 +203,13 @@ public class MainHelper  {
             Only the first A in the 2nd position will highlight yellow.
 
         contributors: Marcie Grayson
+
+        ------------------------------------------------
+
+        This method is also where the bulk of Practice Mode is implemented. We add eligible words to a
+        map.
+
+        contributors: Abir Islam
     */
     public void updateRowColors(GridPane gridPane, int searchRow) {
         // Using HashMaps to resolve bugs
@@ -229,6 +241,20 @@ public class MainHelper  {
             }
         }
 
+        if (checkForReset) {
+            wordLib = (ArrayList)winningWords.clone();
+            checkForReset = false;
+        }
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Possible Guesses");
+        alert.setHeaderText("Practice Mode Possible Guesses");
+        String bigString = "";
+
+        InputStream winning_words = getClass().getResourceAsStream("winning-words.txt");
+        Stream<String> winning_words_lines = new BufferedReader(new InputStreamReader(winning_words)).lines();
+        winning_words_lines.forEach(wordLibrary::add);
+
         for (int i = 1; i <= MAX_COLUMN; i++) {
             Label label = getLabel(gridPane, searchRow, i);
             String styleClass;
@@ -239,16 +265,50 @@ public class MainHelper  {
 
                 if (isCorrectLetter) {
                     styleClass = "correct-letter";
+                    map.put(i, currentCharacter);
+                    for (String word : winningWords) {
+                        String newWord = String.valueOf(word.charAt(i - 1));
+                        if (!newWord.equals(currentCharacter)) {
+                            wordLib.remove(word);
+                        }
+                    }
                 } else if (isPresentLetter) {
                     styleClass = "present-letter";
                     checkDups.put(currentCharacter, (checkDups.get(currentCharacter) - 1));
+                    validLetters.add(currentCharacter);
+                    for (String word : winningWords)
+                        if (!word.contains(currentCharacter)) {
+                            wordLib.remove(word);
+                        }
                 } else {
                     styleClass = "wrong-letter";
+                    incorrectLetters.add(currentCharacter);
+                    for (String word : winningWords) {
+                        if (word.contains(currentCharacter)) {
+                            wordLib.remove(word);
+                        }
+                    }
                 }
 
                 transit(label, styleClass);
             }
         }
+
+        int size = wordLib.size();
+        if (size > 4) {
+            for (int j = 0; j < 5; j++) {
+                bigString += wordLib.get(j);
+                bigString += "\n";
+            }
+        } else {
+            for (int k = 0; k < wordLib.size(); k++) {
+                bigString += wordLib.get(k);
+                bigString += "\n";
+            }
+        }
+
+        alert.setContentText(bigString);
+        alert.show();
     }
 
     private void transit(Label label, String styleClass ){
@@ -421,6 +481,7 @@ public class MainHelper  {
 
         CURRENT_COLUMN = 1;
         CURRENT_ROW = 1;
+        checkForReset = true;
     }
 
     public void restart(ImageView restartIcon, GridPane gridPane, GridPane keyboardRow1,
