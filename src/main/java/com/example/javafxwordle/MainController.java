@@ -45,6 +45,10 @@ public class MainController {
     public ImageView alphaIcon;
     @FXML
     public ImageView betaIcon;
+    @FXML
+    public ImageView hamburgerMenu;
+    @FXML
+    public VBox menuVBox;
 
     @FXML
     public TextField nameTextField;
@@ -118,6 +122,11 @@ public class MainController {
     // Limited Guesses Mode; contributors: Marcie
     public void toggleLimitedGuesses(){
         mainHelper.toggleLimitedGuesses(extraVBox);
+    }
+
+    // Hamburger Menu; contributors: Kevin
+    public void showMenu() {
+        mainHelper.showMenu(menuVBox);
     }
 
     /*

@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.net.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.shape.*?>
-<?import javafx.scene.*?>
-
-
-
-<?import javafx.scene.control.Label?>
+<?import javafx.scene.shape.Line?>
+<?import java.net.URL?>
 <BorderPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="Infinity" maxWidth="Infinity" prefHeight="715"
             prefWidth="500"
             styleClass="main-screen" xmlns="http://javafx.com/javafx/11"
@@ -23,55 +18,52 @@
         <VBox alignment="TOP_CENTER" minWidth="480.0">
 
             <HBox alignment="CENTER">
-                <padding>
-                    <Insets left="30" bottom="8" />
-                </padding>
-                <Pane>
-                    <padding>
-                        <Insets right="7" />
-                    </padding>
-                    <ImageView fx:id="stopwatchIcon" fitHeight="32" fitWidth="32" onMouseClicked="#toggleTimeTrial" />
-                    
-                </Pane>
 
-                <Pane>
-                    <padding>
-                        <Insets right="7" />
-                    </padding>
-                    <ImageView fx:id="addFileIcon" fitHeight="32" fitWidth="32" onMouseClicked="#showCustomDict" />
-                </Pane>
+                <!-- Start of Menu -->
+                <StackPane>
+                    <HBox alignment="CENTER">
+                        <ImageView fx:id="hamburgerMenu" fitHeight="32" fitWidth="32" onMouseClicked="#showMenu"/>
 
-                <Pane>
+                        <!-- New Features (hidden menu) -->
+                        <VBox fx:id="menuVBox" visible="false" managed="false">
+                            <VBox>
+                                <Pane>
+                                    <ImageView fx:id="stopwatchIcon" fitHeight="32" fitWidth="32" onMouseClicked="#toggleTimeTrial" />
+                                </Pane>
+
+                                <Pane>
+                                    <ImageView fx:id="addFileIcon" fitHeight="32" fitWidth="32" onMouseClicked="#showCustomDict" />
+                                </Pane>
+
+                                <Pane>
+                                    <ImageView fx:id="alphaIcon" fitHeight="32" fitWidth="32" onMouseClicked="#toggleAllChars" />
+                                </Pane>
+
+                                <Pane>
+                                    <ImageView fx:id="betaIcon" fitHeight="32" fitWidth="32" onMouseClicked="#toggleLimitedGuesses" />
+                                </Pane>
+                            </VBox>
+                        </VBox>
+                    </HBox>
+                </StackPane>
+
+                <!-- Original Features -->
+                <StackPane>
                     <ImageView fx:id="helpIcon" fitHeight="32" fitWidth="32" onMouseClicked="#showHelp" />
-                </Pane>
+                </StackPane>
 
                 <HBox fx:id="titleHBox" alignment="CENTER"  prefHeight="50.0" >
                     <padding>
                         <Insets left="27" bottom="8" right="30"/>
                     </padding>
                 </HBox>
-                <Pane>
-                    <ImageView fx:id="restartIcon" fitHeight="40" fitWidth="40" onMouseClicked="#restart" />
+                <StackPane>
+                    <ImageView fx:id="restartIcon" fitHeight="32" fitWidth="32" onMouseClicked="#restart" />
                     <padding>
                         <Insets right="15" />
                     </padding>
-                </Pane>
-                <Pane>
-                    <padding>
-                        <Insets right="15" />
-                    </padding>
-                    <ImageView fx:id="alphaIcon" fitHeight="32" fitWidth="32" onMouseClicked="#toggleAllChars" />
-                </Pane>
-                <Pane>
-                    <padding>
-                        <Insets right="15" />
-                    </padding>
-                    <ImageView fx:id="betaIcon" fitHeight="32" fitWidth="32" onMouseClicked="#toggleLimitedGuesses" />
-                </Pane>
+                </StackPane>
 
-               <padding>
-                   <Insets right="35" />
-               </padding>
             </HBox>
 
             <Line endX="2000" stroke="#b8b8b8"/>
