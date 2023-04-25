@@ -189,7 +189,7 @@ public class MainHelper  {
     */
     public void updateRowColors(GridPane gridPane, int searchRow) {
         // Using HashMaps to resolve bugs
-        HashMap <String, Integer> checkDups = new HashMap<String, Integer>();
+        HashMap <String, Integer> checkDups = new HashMap<>();
 
         int count=1;
         for(int i=0; i< winningWord.length(); i++){
@@ -227,7 +227,6 @@ public class MainHelper  {
 
                 if (isCorrectLetter) {
                     styleClass = "correct-letter";
-                    //checkDups.put(currentCharacter, (checkDups.get(currentCharacter) - 1));
                 } else if (isPresentLetter) {
                     styleClass = "present-letter";
                     checkDups.put(currentCharacter, (checkDups.get(currentCharacter) - 1));
@@ -238,38 +237,6 @@ public class MainHelper  {
                 transit(label, styleClass);
             }
         }
-
-        /*
-        // OLD IMPLEMENTATION
-        for (int i = 1; i <= MAX_COLUMN; i++) {
-            Label label = getLabel(gridPane, searchRow, i);
-            String styleClass;
-            if (label != null) {
-                String currentCharacter = String.valueOf(label.getText().charAt(0)).toLowerCase();
-                if (String.valueOf(winningWord.charAt(i - 1)).toLowerCase().equals(currentCharacter)) {
-                    styleClass = "correct-letter";
-                } else if (winningWord.contains(currentCharacter)) {
-                    styleClass = "present-letter";
-                } else {
-                    styleClass = "wrong-letter";
-                }
-
-                FadeTransition firstFadeTransition = new FadeTransition(Duration.millis(300), label);
-                firstFadeTransition.setFromValue(1);
-                firstFadeTransition.setToValue(0.2);
-                firstFadeTransition.setOnFinished(e -> {
-                    label.getStyleClass().clear();
-                    label.getStyleClass().setAll(styleClass);
-                });
-
-                FadeTransition secondFadeTransition = new FadeTransition(Duration.millis(300), label);
-                secondFadeTransition.setFromValue(0.2);
-                secondFadeTransition.setToValue(1);
-
-                new SequentialTransition(firstFadeTransition, secondFadeTransition).play();
-            }
-        }
-        */
     }
 
     private void transit(Label label, String styleClass ){
@@ -290,7 +257,7 @@ public class MainHelper  {
 
     protected void updateKeyboardColors(GridPane gridPane, GridPane keyboardRow1, GridPane keyboardRow2, GridPane keyboardRow3) {
         String currentWord = getWordFromCurrentRow(gridPane).toLowerCase();
-        HashSet<String> checkDups = new HashSet<String>();
+        HashSet<String> checkDups = new HashSet<>();
    
         for (int i = 1; i <= MAX_COLUMN; i++) {
             Label keyboardLabel = new Label();
@@ -392,17 +359,10 @@ public class MainHelper  {
             allCharsMode(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
         }
         else if((!normal) && (!allChars) && limitGuess){
-            limitedGuesesMode(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
+            limitedGuessesMode(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
         }
-        //normalMode(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
-
-        //allCharsMode(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
-
-        //limitedGuesesMode(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
             
-        }
-
-    
+    }
 
     public void getRandomWord() {
         winningWord = winningWords.get(new Random().nextInt(winningWords.size()));
@@ -505,31 +465,30 @@ public class MainHelper  {
         }
     }
 
-    public void allChars(VBox extraVBox) {
+    public void toggleAllChars(VBox extraVBox) {
         if(allChars) {
             allChars= false;
             limitGuess= false;
             normal=true;
-            System.out.println("All chars mode disable"); 
+            System.out.println("THIS IS FOR DEBUGGING PURPOSES: All Characters Mode disabled.");
             gameModeLabel.setText("Game Mode: Normal");
-            extraVBox.getChildren().remove(numAttempts);
-        } 
+        }
         else {
             allChars=true;
             limitGuess=false;
             normal=false;
-            System.out.println("All chars mode enable");
+            System.out.println("THIS IS FOR DEBUGGING PURPOSES: All Characters Mode enabled.");
             gameModeLabel.setText("Game Mode: All Characters");
-            extraVBox.getChildren().remove(numAttempts);
         }
+        extraVBox.getChildren().remove(numAttempts);
     }
 
-    public void limitedGueses(VBox extraVBox) {
+    public void toggleLimitedGuesses(VBox extraVBox) {
         if(limitGuess) {
             allChars= false;
             limitGuess= false;
             normal=true;
-            System.out.println("Limited Guess mode disable");
+            System.out.println("THIS IS FOR DEBUGGING PURPOSES: Limited Guesses Mode disabled.");
             gameModeLabel.setText("Game Mode: Normal");
             extraVBox.getChildren().remove(numAttempts);
         } 
@@ -537,30 +496,12 @@ public class MainHelper  {
             limitGuess=true;
             allChars=false;
             normal=false;
-            System.out.println("Limited Guess mode Enable");
+            System.out.println("THIS IS FOR DEBUGGING PURPOSES: Limited Guesses Mode enabled.");
             gameModeLabel.setText("Game Mode: Limited Guesses");
             extraVBox.getChildren().add(numAttempts);
             attempts=5;
         }
     }
-    public MainHelper returnInstance(){
-        return INSTANCE;
-    } 
-    public int getCURRENT_ROW(){
-        return CURRENT_ROW;
-    }
-
-    public int getCURRENT_COLUMN(){
-        return CURRENT_COLUMN;
-    }
-
-    public void incrementCURRUENT_ROW(){
-        CURRENT_ROW++;
-    }
-    public void incrementCURRUENT_COLUMN(){
-        CURRENT_COLUMN++;
-    }
-
 
     public void normalMode(GridPane gridPane, GridPane keyboardRow1, GridPane keyboardRow2,
                             GridPane keyboardRow3){
@@ -660,7 +601,7 @@ public class MainHelper  {
     }
 
 
-    public void limitedGuesesMode(GridPane gridPane, GridPane keyboardRow1, GridPane keyboardRow2,
+    public void limitedGuessesMode(GridPane gridPane, GridPane keyboardRow1, GridPane keyboardRow2,
                             GridPane keyboardRow3){
 
         if (CURRENT_ROW <= MAX_ROW && CURRENT_COLUMN == MAX_COLUMN) {

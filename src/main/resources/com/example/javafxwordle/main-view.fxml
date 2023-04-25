@@ -51,13 +51,13 @@
                     <padding>
                         <Insets right="15" />
                     </padding>
-                    <ImageView fx:id="alphaIcon" fitHeight="32" fitWidth="32" onMouseClicked="#allCharsMode" />
+                    <ImageView fx:id="alphaIcon" fitHeight="32" fitWidth="32" onMouseClicked="#toggleAllChars" />
                 </Pane>
                 <Pane>
                     <padding>
                         <Insets right="15" />
                     </padding>
-                    <ImageView fx:id="betaIcon" fitHeight="32" fitWidth="32" onMouseClicked="#limitedGuesesMode" />
+                    <ImageView fx:id="betaIcon" fitHeight="32" fitWidth="32" onMouseClicked="#toggleLimitedGuesses" />
                 </Pane>
 
                <padding>

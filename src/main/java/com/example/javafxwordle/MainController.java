@@ -92,12 +92,15 @@ public class MainController {
     public void toggleTimeTrial() {
         mainHelper.toggleTimeTrial(extraHBox, stopwatchIcon);
     }
-    public void allCharsMode(){
-        mainHelper.allChars(extraVBox);
+
+    // All Characters Accepted Mode; contributors: Marcie
+    public void toggleAllChars(){
+        mainHelper.toggleAllChars(extraVBox);
     }
 
-    public void limitedGuesesMode(){
-        mainHelper.limitedGueses(extraVBox);
+
+    public void toggleLimitedGuesses(){
+        mainHelper.toggleLimitedGuesses(extraVBox);
     }
 
     //@FXML
