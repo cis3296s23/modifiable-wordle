@@ -4,18 +4,19 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.stream.Stream;
 
 public class MainApplication extends Application {
-
     public static final ArrayList<String> winningWords = new ArrayList<>();
     public static final ArrayList<String> dictionaryWords = new ArrayList<>();
 
@@ -33,20 +34,27 @@ public class MainApplication extends Application {
         mainController.getRandomWord();
         mainController.helpIcon.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/help.png"))));
         mainController.restartIcon.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/icons8-restart-40.png"))));
+
+        mainController.addFileIcon.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/file.png"))));
+
+        // Icon for Time Trial mode; contributors: Abir, Ato, Kevin, Marcie
         mainController.stopwatchIcon.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/stopwatch.png"))));
+
+        // Icon for Difficulty modes; contributors: Marcie
+        mainController.alphaIcon.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/alpha.png"))));
+        mainController.betaIcon.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/beta.png"))));
 
         double screenWidth = Screen.getPrimary().getBounds().getWidth();
         double screenHeight = Screen.getPrimary().getBounds().getHeight();
-        Scene scene = new Scene(root, 500, 715);
-        stage.setMinWidth(500);
-        stage.setMinHeight(730);
+        Scene scene = new Scene(root, 650, 825);
+        stage.setMinWidth(650);
+        stage.setMinHeight(825);
         stage.setMaxWidth(screenWidth);
         stage.setMaxHeight(screenHeight);
-        stage.setTitle("WordleFX");
+        stage.setTitle("Modifiable Wordle");
         stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/icon.png"))));
         stage.setScene(scene);
         stage.show();
-
         mainController.gridRequestFocus();
     }
 
@@ -55,7 +63,7 @@ public class MainApplication extends Application {
     }
 
     public static void showToast() {
-        Toast.makeText(stageReference);
+        Toast.makeText(stageReference, "Not in word list");
     }
 
     public static void quit() {
@@ -74,5 +82,4 @@ public class MainApplication extends Application {
         } else
             quit();
     }
-
 }

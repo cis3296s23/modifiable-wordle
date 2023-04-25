@@ -12,13 +12,13 @@ import org.kordamp.bootstrapfx.BootstrapFX;
 
 public final class Toast {
 
-    public static void makeText(Stage ownerStage) {
+    public static void makeText(Stage ownerStage, String message) {
         Stage stage = new Stage();
         stage.initOwner(ownerStage);
         stage.setResizable(false);
         stage.initStyle(StageStyle.TRANSPARENT);
 
-        Text text = new Text("Not in word list");
+        Text text = new Text(message);
         text.setFill(Color.WHITE);
         text.getStyleClass().setAll("h4");
 
@@ -39,4 +39,8 @@ public final class Toast {
         fadeTransition.setOnFinished(e -> stage.close());
         fadeTransition.play();
     }
+
+
+
+
 }
