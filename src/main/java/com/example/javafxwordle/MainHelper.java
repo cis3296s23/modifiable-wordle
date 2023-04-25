@@ -98,9 +98,8 @@ public class MainHelper  {
 
     public void createExtraVBox(VBox extraVBox){
         gameModeLabel.setFont(Font.font("Cambria", 30));
-        numAttempts.setFont(Font.font("Cambtia", 20));
+        numAttempts.setFont(Font.font("Cambria", 20));
         extraVBox.getChildren().add(gameModeLabel);
-        //extraVBox.getChildren().add(numAttempts);
     }
 
     public void createGrid(GridPane gridPane) {
@@ -818,6 +817,12 @@ public class MainHelper  {
             if (ScoreWindow.quitApplication.get())
                 MainApplication.quit();
             }
+    }
+
+    // TESTING
+    public void showMenu(VBox menuVBox) {
+        menuVBox.setVisible(true);
+        menuVBox.setManaged(true);
     }
     
 }

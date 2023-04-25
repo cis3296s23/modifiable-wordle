@@ -45,6 +45,9 @@ public class MainApplication extends Application {
         mainController.alphaIcon.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/alpha.png"))));
         mainController.betaIcon.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/beta.png"))));
 
+        // Icon for Hamburger Menu; contributors: Kevin
+        mainController.hamburgerMenu.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/menu.png"))));
+
         double screenWidth = Screen.getPrimary().getBounds().getWidth();
         double screenHeight = Screen.getPrimary().getBounds().getHeight();
         Scene scene = new Scene(root, 650, 825);
