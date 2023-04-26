@@ -588,7 +588,7 @@ public class MainHelper  {
                     return;
                 }
                 else{
-                    dictionary = new FileInputStream(file);
+                    dictionary = new FileInputStream(file);  // Possible issue with dictionary here, causing it not to change in practice?
                 }
             }catch(FileNotFoundException e){
                 System.out.println("FileNotFoundException from changeDictionaryWords()");
@@ -597,10 +597,11 @@ public class MainHelper  {
         }
         assert dictionary != null;
         Stream<String> dictionary_lines = new BufferedReader(new InputStreamReader(dictionary)).lines();
-        dictionaryWords.clear();
-        dictionary_lines.forEach(dictionaryWords::add);
+        winningWords.clear();
+        dictionary_lines.forEach(winningWords::add);
         Scene scene = nameTextField.getScene();
         Stage stage = (Stage) scene.getWindow();
+
         Toast.makeText(stage, "DICTIONARY WORDS CHANGED");
         System.out.println("THIS IS FOR DEBUGGING PURPOSES: Dictionary words changed successfully.");
     }
