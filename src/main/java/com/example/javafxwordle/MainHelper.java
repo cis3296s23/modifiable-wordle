@@ -527,7 +527,7 @@ public class MainHelper  {
 
         contributors: Abir, Ato, Kevin, Marcie
     */
-    public void toggleTimeTrial(HBox extraHBox, ImageView stopwatchIcon) {
+    public void toggleTimeTrial(HBox extraHBox) {
         if(timeTrialEnabled) {
             extraHBox.setVisible(false);
             extraHBox.setManaged(false);
@@ -549,7 +549,7 @@ public class MainHelper  {
         You can specify a filepath to a .txt file or the name of a preset .txt file to change
         what words can be selected as possible winning words.
 
-        contributors: Ato
+        contributors: Ato, Jonathan, Kevin
     */
     public void showCustomDict()  {
         try{

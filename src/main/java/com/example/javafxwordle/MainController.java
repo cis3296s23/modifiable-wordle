@@ -106,7 +106,7 @@ public class MainController {
 
     // Time Trial Mode; contributors: Abir, Ato, Kevin, Marcie
     public void toggleTimeTrial() {
-        mainHelper.toggleTimeTrial(extraHBox, stopwatchIcon);
+        mainHelper.toggleTimeTrial(extraHBox);
     }
 
     // Custom Dictonaries; contributors: Ato
