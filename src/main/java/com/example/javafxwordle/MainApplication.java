@@ -45,6 +45,9 @@ public class MainApplication extends Application {
         mainController.alphaIcon.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/alpha.png"))));
         mainController.betaIcon.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/beta.png"))));
 
+        // Icon for Practice mode; contributors: Abir
+        mainController.practiceIcon.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/key.png"))));
+
         // Icon for Hamburger Menu; contributors: Kevin
         mainController.hamburgerMenu.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("images/menu.png"))));
 
