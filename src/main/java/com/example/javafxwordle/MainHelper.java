@@ -599,7 +599,6 @@ public class MainHelper  {
         Stream<String> dictionary_lines = new BufferedReader(new InputStreamReader(dictionary)).lines();
         winningWords.clear();
         dictionary_lines.forEach(winningWords::add);
-        System.out.println(dictionary_lines);
         Scene scene = nameTextField.getScene();
         Stage stage = (Stage) scene.getWindow();
 
