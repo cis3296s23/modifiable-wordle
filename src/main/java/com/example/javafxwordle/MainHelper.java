@@ -44,15 +44,16 @@ public class MainHelper  {
 
     // New Variables for Game Modes Implementations
     protected boolean timeTrialEnabled= false;
-    protected boolean allChars= false;
-    protected boolean limitGuess= false;
-    protected boolean normal= true;
+    protected boolean allCharsEnabled = false;
+    protected boolean limitGuessEnabled = false;
+    protected boolean normalEnabled = true;
+    protected boolean practiceEnabled = false;
 
     protected boolean menuOpen = false;
 
     private final Label stopwatchLabel = new Label("0");
-    protected Label gameModeLabel= new Label("Game Mode: Normal");
-    protected Label numAttempts= new Label("Number of Attempts Left: " + attempts);
+    protected Label gameModeLabel = new Label("Game Mode: Normal");
+    protected Label numAttempts = new Label("Number of Attempts Left: " + attempts);
 
     private final HashMap<Integer, String> map = new HashMap<>();
     private final ArrayList<String> incorrectLetters = new ArrayList<>();
@@ -207,8 +208,8 @@ public class MainHelper  {
 
         ------------------------------------------------
 
-        This method is also where the bulk of Practice Mode is implemented. We add eligible words to a
-        map.
+        This method is also where the bulk of Practice Mode is implemented. We slowly start to
+        remove ineligible words from our ArrayList following a user's guess.
 
         contributors: Abir Islam
     */
@@ -278,10 +279,12 @@ public class MainHelper  {
                     styleClass = "present-letter";
                     checkDups.put(currentCharacter, (checkDups.get(currentCharacter) - 1));
                     validLetters.add(currentCharacter);
-                    for (String word : winningWords)
-                        if (!word.contains(currentCharacter)) {
+                    for (String word : winningWords) {
+                        String newWord = String.valueOf(word.charAt(i - 1));
+                        if (!word.contains(currentCharacter) || newWord.equals(currentCharacter)) {
                             wordLib.remove(word);
                         }
+                    }
                 } else {
                     styleClass = "wrong-letter";
                     incorrectLetters.add(currentCharacter);
@@ -309,8 +312,11 @@ public class MainHelper  {
             }
         }
 
-        alert.setContentText(bigString.toString());
-        alert.show();
+        if(!getWordFromCurrentRow(gridPane).equals(winningWord) && practiceEnabled) {
+            alert.setContentText(bigString.toString());
+            alert.show();
+        }
+
     }
 
     private void transit(Label label, String styleClass ){
@@ -426,13 +432,13 @@ public class MainHelper  {
 
     void onEnterPressed(GridPane gridPane, GridPane keyboardRow1, GridPane keyboardRow2,
                               GridPane keyboardRow3) {
-        if (normal && (!allChars) && (!limitGuess)){
+        if (normalEnabled && (!allCharsEnabled) && (!limitGuessEnabled)){
             normalMode(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
         }
-        else if((!normal) && allChars && (!limitGuess)){
+        else if((!normalEnabled) && allCharsEnabled && (!limitGuessEnabled)){
             allCharsMode(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
         }
-        else if((!normal) && (!allChars) && limitGuess){
+        else if((!normalEnabled) && (!allCharsEnabled) && limitGuessEnabled){
             limitedGuessesMode(gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
         }
             
@@ -527,20 +533,19 @@ public class MainHelper  {
 
         contributors: Abir, Ato, Kevin, Marcie
     */
-    public void toggleTimeTrial(HBox extraHBox, ImageView stopwatchIcon) {
+    public void toggleTimeTrial(HBox extraHBox) {
         if(timeTrialEnabled) {
             extraHBox.setVisible(false);
             extraHBox.setManaged(false);
             stopwatchLabel.setText("0");
             stopwatch.pause();
-            timeTrialEnabled = false;
             System.out.println("THIS IS FOR DEBUGGING PURPOSES: Time Trial Mode disabled.");
         } else {
             extraHBox.setVisible(true);
             extraHBox.setManaged(true);
-            timeTrialEnabled = true;
             System.out.println("THIS IS FOR DEBUGGING PURPOSES: Time Trial Mode enabled.");
         }
+        timeTrialEnabled = !timeTrialEnabled;
     }
 
     /*
@@ -549,7 +554,7 @@ public class MainHelper  {
         You can specify a filepath to a .txt file or the name of a preset .txt file to change
         what words can be selected as possible winning words.
 
-        contributors: Ato
+        contributors: Ato, Jonathan, Kevin
     */
     public void showCustomDict()  {
         try{
@@ -618,17 +623,17 @@ public class MainHelper  {
         contributors: Marcie
     */
     public void toggleAllChars(VBox extraVBox) {
-        if(allChars) {
-            allChars= false;
-            limitGuess= false;
-            normal=true;
+        if(allCharsEnabled) {
+            allCharsEnabled = false;
+            limitGuessEnabled = false;
+            normalEnabled =true;
             System.out.println("THIS IS FOR DEBUGGING PURPOSES: All Characters Mode disabled.");
             gameModeLabel.setText("Game Mode: Normal");
         }
         else {
-            allChars=true;
-            limitGuess=false;
-            normal=false;
+            allCharsEnabled =true;
+            limitGuessEnabled =false;
+            normalEnabled =false;
             System.out.println("THIS IS FOR DEBUGGING PURPOSES: All Characters Mode enabled.");
             gameModeLabel.setText("Game Mode: All Characters");
         }
@@ -636,18 +641,18 @@ public class MainHelper  {
     }
 
     public void toggleLimitedGuesses(VBox extraVBox) {
-        if(limitGuess) {
-            allChars= false;
-            limitGuess= false;
-            normal=true;
+        if(limitGuessEnabled) {
+            allCharsEnabled = false;
+            limitGuessEnabled = false;
+            normalEnabled =true;
             System.out.println("THIS IS FOR DEBUGGING PURPOSES: Limited Guesses Mode disabled.");
             gameModeLabel.setText("Game Mode: Normal");
             extraVBox.getChildren().remove(numAttempts);
         } 
         else {
-            limitGuess=true;
-            allChars=false;
-            normal=false;
+            limitGuessEnabled =true;
+            allCharsEnabled =false;
+            normalEnabled =false;
             System.out.println("THIS IS FOR DEBUGGING PURPOSES: Limited Guesses Mode enabled.");
             gameModeLabel.setText("Game Mode: Limited Guesses");
             extraVBox.getChildren().add(numAttempts);
@@ -801,7 +806,7 @@ public class MainHelper  {
             } 
             else {
                 MainApplication.showToast();
-                //Not sure if we what to count an attempt everything enter is pressed or guess is an 5 char string
+                // Not sure if we what to count an attempt everything enter is pressed or guess is an 5 char string
                 if (guess.length()==winningWord.length()){
                     attempts--;
                     numAttempts.setText("Number of Attempts Left: " + attempts);
@@ -822,17 +827,33 @@ public class MainHelper  {
             }
     }
 
+    // Practice Mode Helper Method
+    public void togglePractice() {
+        String currentText = gameModeLabel.getText();
+        if(practiceEnabled) {
+            if(currentText.charAt(currentText.length()-1) == '+') {
+                gameModeLabel.setText(currentText.substring(0, currentText.length() - 1));
+            }
+            System.out.println("THIS IS FOR DEBUGGING PURPOSES: Practice Mode disabled.");
+        } else {
+            if(currentText.charAt(currentText.length()-1) != '+') {
+                gameModeLabel.setText(currentText + "+");
+            }
+            System.out.println("THIS IS FOR DEBUGGING PURPOSES: Practice Mode enabled.");
+        }
+        practiceEnabled = !practiceEnabled;
+    }
+
     // TESTING
     public void showMenu(VBox menuVBox) {
         if(menuOpen) {
             menuVBox.setVisible(false);
             menuVBox.setManaged(false);
-            menuOpen = false;
         } else {
             menuVBox.setVisible(true);
             menuVBox.setManaged(true);
-            menuOpen = true;
         }
+        menuOpen = !menuOpen;
 
     }
     

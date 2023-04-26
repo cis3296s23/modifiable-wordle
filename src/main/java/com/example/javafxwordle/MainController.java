@@ -46,6 +46,8 @@ public class MainController {
     @FXML
     public ImageView betaIcon;
     @FXML
+    public ImageView practiceIcon;
+    @FXML
     public ImageView hamburgerMenu;
     @FXML
     public VBox menuVBox;
@@ -106,12 +108,11 @@ public class MainController {
 
     // Time Trial Mode; contributors: Abir, Ato, Kevin, Marcie
     public void toggleTimeTrial() {
-        mainHelper.toggleTimeTrial(extraHBox, stopwatchIcon);
+        mainHelper.toggleTimeTrial(extraHBox);
     }
 
-    // Custom Dictonaries; contributors: Ato
+    // Custom Dictionaries; contributors: Ato
     public void handleCustomDictSubmit()  { mainHelper.handleCustomDictSubmit(nameTextField); }
-
     public void showCustomDict() { mainHelper.showCustomDict(); }
     
     // All Characters Accepted Mode; contributors: Marcie
@@ -122,6 +123,11 @@ public class MainController {
     // Limited Guesses Mode; contributors: Marcie
     public void toggleLimitedGuesses(){
         mainHelper.toggleLimitedGuesses(extraVBox);
+    }
+
+    // Practice Mode; contributors: Abir, Kevin
+    public void togglePractice() {
+        mainHelper.togglePractice();
     }
 
     // Hamburger Menu; contributors: Kevin

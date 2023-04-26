@@ -17,53 +17,75 @@
     <top>
         <VBox alignment="TOP_CENTER" minWidth="480.0">
 
-            <HBox alignment="CENTER">
+            <HBox>
 
                 <!-- Start of Menu -->
                 <StackPane>
-                    <HBox alignment="CENTER">
-                        <ImageView fx:id="hamburgerMenu" fitHeight="32" fitWidth="32" onMouseClicked="#showMenu"/>
-
-                        <!-- New Features (hidden menu) -->
-                        <VBox fx:id="menuVBox" visible="false" managed="false">
-                            <VBox>
-                                <Pane>
-                                    <ImageView fx:id="stopwatchIcon" fitHeight="32" fitWidth="32" onMouseClicked="#toggleTimeTrial" />
-                                </Pane>
-
-                                <Pane>
-                                    <ImageView fx:id="addFileIcon" fitHeight="32" fitWidth="32" onMouseClicked="#showCustomDict" />
-                                </Pane>
-
-                                <Pane>
-                                    <ImageView fx:id="alphaIcon" fitHeight="32" fitWidth="32" onMouseClicked="#toggleAllChars" />
-                                </Pane>
-
-                                <Pane>
-                                    <ImageView fx:id="betaIcon" fitHeight="32" fitWidth="32" onMouseClicked="#toggleLimitedGuesses" />
-                                </Pane>
-                            </VBox>
-                        </VBox>
-                    </HBox>
+                    <ImageView fx:id="hamburgerMenu" fitHeight="32" fitWidth="32" onMouseClicked="#showMenu"/>
+                    <padding>
+                        <Insets left="10" bottom="5" right="75"/>
+                    </padding>
                 </StackPane>
 
                 <!-- Original Features -->
                 <StackPane>
                     <ImageView fx:id="helpIcon" fitHeight="32" fitWidth="32" onMouseClicked="#showHelp" />
+                    <padding>
+                        <Insets bottom="8"/>
+                    </padding>
                 </StackPane>
 
                 <HBox fx:id="titleHBox" alignment="CENTER"  prefHeight="50.0" >
                     <padding>
-                        <Insets left="27" bottom="8" right="30"/>
+                        <Insets left="30" bottom="8" right="30"/>
                     </padding>
                 </HBox>
                 <StackPane>
                     <ImageView fx:id="restartIcon" fitHeight="32" fitWidth="32" onMouseClicked="#restart" />
                     <padding>
-                        <Insets right="15" />
+                        <Insets bottom="8" right="15" />
                     </padding>
                 </StackPane>
 
+            </HBox>
+
+            <HBox alignment="CENTER">
+                <!-- New Features (hidden menu) -->
+                <VBox fx:id="menuVBox" visible="false" managed="false">
+                    <HBox>
+                        <Pane>
+                            <ImageView fx:id="stopwatchIcon" fitHeight="32" fitWidth="32" onMouseClicked="#toggleTimeTrial" />
+                            <padding>
+                                <Insets right="7" />
+                            </padding>
+                        </Pane>
+
+                        <Pane>
+                            <ImageView fx:id="addFileIcon" fitHeight="32" fitWidth="32" onMouseClicked="#showCustomDict" />
+                            <padding>
+                                <Insets right="7" />
+                            </padding>
+                        </Pane>
+
+                        <Pane>
+                            <ImageView fx:id="alphaIcon" fitHeight="32" fitWidth="32" onMouseClicked="#toggleAllChars" />
+                            <padding>
+                                <Insets right="7" />
+                            </padding>
+                        </Pane>
+
+                        <Pane>
+                            <ImageView fx:id="betaIcon" fitHeight="32" fitWidth="32" onMouseClicked="#toggleLimitedGuesses" />
+                            <padding>
+                                <Insets right="7" />
+                            </padding>
+                        </Pane>
+
+                        <Pane>
+                            <ImageView fx:id="practiceIcon" fitHeight="32" fitWidth="32" onMouseClicked="#togglePractice" />
+                        </Pane>
+                    </HBox>
+                </VBox>
             </HBox>
 
             <Line endX="2000" stroke="#b8b8b8"/>
