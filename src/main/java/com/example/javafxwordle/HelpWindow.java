@@ -20,7 +20,9 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class HelpWindow {
-
+    /**
+     *
+     */
     public static void display() {
         Stage stage = new Stage();
         stage.initModality(Modality.APPLICATION_MODAL);

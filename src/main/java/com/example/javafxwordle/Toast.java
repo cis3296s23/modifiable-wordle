@@ -11,7 +11,11 @@ import javafx.util.Duration;
 import org.kordamp.bootstrapfx.BootstrapFX;
 
 public final class Toast {
-
+    /**
+     *
+     * @param ownerStage
+     * @param message
+     */
     public static void makeText(Stage ownerStage, String message) {
         Stage stage = new Stage();
         stage.initOwner(ownerStage);

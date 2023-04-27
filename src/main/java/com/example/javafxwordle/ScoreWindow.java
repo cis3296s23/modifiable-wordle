@@ -16,13 +16,20 @@ import org.kordamp.bootstrapfx.BootstrapFX;
 import java.util.Objects;
 
 public class ScoreWindow {
-
+    /**
+     *
+     */
     private ScoreWindow() {
     }
 
     public static BooleanProperty resetGame = new SimpleBooleanProperty(false);
     public static BooleanProperty quitApplication = new SimpleBooleanProperty(false);
 
+    /**
+     *
+     * @param guessed
+     * @param winningWord
+     */
     public static void display(boolean guessed, String winningWord) {
         Stage stage = new Stage();
         stage.initModality(Modality.APPLICATION_MODAL);

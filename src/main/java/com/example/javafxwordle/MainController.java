@@ -14,6 +14,9 @@ import javafx.stage.StageStyle;
 import java.io.IOException;
 import javafx.scene.layout.VBox;
 
+/**
+ * Handles all methods from MainHelper. Most old and new features communicate between MainController and MainHelper
+ */
 public class MainController {
 
     private final MainHelper mainHelper = MainHelper.getInstance();
@@ -61,70 +64,109 @@ public class MainController {
         createExtraVBox();
     }
 
-    
+    /**
+     *
+     */
     public void createGrid() {
         mainHelper.createGrid(gridPane);
     }
 
+    /**
+     *
+     */
     public void createKeyboard() {
         mainHelper.createKeyboard(keyboardRow1, keyboardRow2, keyboardRow3);
     }
 
+    /**
+     *
+     */
     public void gridRequestFocus() {
         gridPane.requestFocus();
     }
 
+    /**
+     *
+     * @param keyEvent
+     */
     @FXML
     protected void onKeyPressed(KeyEvent keyEvent) {
         mainHelper.onKeyPressed(gridPane, keyboardRow1, keyboardRow2, keyboardRow3, keyEvent);
     }
 
+    /**
+     *
+     */
     public void getRandomWord() {
         mainHelper.getRandomWord();
     }
 
+    /**
+     *
+     */
     public void showHelp() {
         HelpWindow.display();
     }
 
+    /**
+     *
+     */
     public void createTitleHBox() {
         mainHelper.createTitleHBox(titleHBox);
     }
 
+    /**
+     *
+     */
     public void createExtraHBox() {
         mainHelper.createExtraHBox(extraHBox);
     }
 
+    /**
+     *
+     */
     private void createExtraVBox() {
         mainHelper.createExtraVBox(extraVBox);
     }
 
-
+    /**
+     *
+     */
     public void restart() {
         mainHelper.restart(restartIcon, gridPane, keyboardRow1, keyboardRow2, keyboardRow3);
     }
 
-    // Time Trial Mode; contributors: Abir, Ato, Kevin, Marcie
+    /**
+     * Time Trial Mode; contributors: Abir, Ato, Kevin, Marcie
+     */
     public void toggleTimeTrial() {
         mainHelper.toggleTimeTrial(extraHBox, stopwatchIcon);
     }
 
-    // Custom Dictonaries; contributors: Ato
+    /**
+     * Custom Dictonaries; contributors: Ato
+     */
     public void handleCustomDictSubmit()  { mainHelper.handleCustomDictSubmit(nameTextField); }
 
     public void showCustomDict() { mainHelper.showCustomDict(); }
-    
-    // All Characters Accepted Mode; contributors: Marcie
+
+    /**
+     * All Characters Accepted Mode; contributors: Marcie
+      */
     public void toggleAllChars(){
         mainHelper.toggleAllChars(extraVBox);
     }
 
-    // Limited Guesses Mode; contributors: Marcie
+    /**
+     * Limited Guesses Mode; contributors: Marcie
+      */
     public void toggleLimitedGuesses(){
         mainHelper.toggleLimitedGuesses(extraVBox);
     }
 
-    // Hamburger Menu; contributors: Kevin
+    /**
+     * Hamburger Menu; contributors: Kevin
+     */
     public void showMenu() {
         mainHelper.showMenu(menuVBox);
     }

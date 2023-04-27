@@ -27,8 +27,15 @@ import java.util.stream.Stream;
 import static com.example.javafxwordle.MainApplication.dictionaryWords;
 import static com.example.javafxwordle.MainApplication.winningWords;
 
+/**
+ * Communicates with MainController for all main functionality of the Wordle game.
+ * Most if not all implementations of new features either are present or communicate with MainHelper.
+ *
+ */
 public class MainHelper  {
-
+    /**
+     *
+     */
     private static MainHelper INSTANCE = null;
 
     private final String[] firstRowLetters = {"Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"};
@@ -69,6 +76,10 @@ public class MainHelper  {
     protected MainHelper() {
     }
 
+    /**
+     *
+     * @return
+     */
     public static MainHelper getInstance() {
         if (INSTANCE == null){
             INSTANCE = new MainHelper();
@@ -77,6 +88,10 @@ public class MainHelper  {
         return INSTANCE;
     }
 
+    /**
+     * Displays the "Wordle" Title above the game
+     * @param titleHBox
+     */
     public void createTitleHBox(HBox titleHBox) {
         ArrayList<Label> titleLetters = new ArrayList<>();
         for (String letter : new String[]{"W", "O", "R", "D", "L", "E"}) {
@@ -93,17 +108,29 @@ public class MainHelper  {
             titleHBox.getChildren().add(label);
     }
 
+    /**
+     *
+     * @param extraHBox
+     */
     public void createExtraHBox(HBox extraHBox) {
         stopwatchLabel.setFont(Font.font("Cambria", 30));
         extraHBox.getChildren().add(stopwatchLabel);
     }
 
+    /**
+     *
+     * @param extraVBox
+     */
     public void createExtraVBox(VBox extraVBox){
         gameModeLabel.setFont(Font.font("Cambria", 30));
         numAttempts.setFont(Font.font("Cambria", 20));
         extraVBox.getChildren().add(gameModeLabel);
     }
 
+    /**
+     *
+     * @param gridPane
+     */
     public void createGrid(GridPane gridPane) {
         for (int i = 1; i <= MAX_ROW; i++) {
             for (int j = 1; j <= MAX_COLUMN; j++) {
@@ -114,6 +141,12 @@ public class MainHelper  {
         }
     }
 
+    /**
+     *
+     * @param keyboardRow1
+     * @param keyboardRow2
+     * @param keyboardRow3
+     */
     public void createKeyboard(GridPane keyboardRow1, GridPane keyboardRow2, GridPane keyboardRow3) {
         for (int i = 0; i < firstRowLetters.length; i++) {
             Label label = new Label();
@@ -138,12 +171,26 @@ public class MainHelper  {
         }
     }
 
+    /**
+     *
+     * @param gridPane
+     * @param searchRow
+     * @param searchColumn
+     * @param input
+     */
     private void setLabelText(GridPane gridPane, int searchRow, int searchColumn, String input) {
         Label label = getLabel(gridPane, searchRow, searchColumn);
         if (label != null)
             label.setText(input.toUpperCase());
     }
 
+    /**
+     *
+     * @param gridPane
+     * @param searchRow
+     * @param searchColumn
+     * @return
+     */
     private Label getLabel(GridPane gridPane, int searchRow, int searchColumn) {
         for (Node child : gridPane.getChildren()) {
             Integer r = GridPane.getRowIndex(child);
@@ -156,6 +203,12 @@ public class MainHelper  {
         return null;
     }
 
+    /**
+     *
+     * @param gridPane
+     * @param letter
+     * @return
+     */
     private Label getLabel(GridPane gridPane, String letter) {
         Label label;
         for (Node child : gridPane.getChildren()) {
@@ -168,6 +221,13 @@ public class MainHelper  {
         return null;
     }
 
+    /**
+     *
+     * @param gridPane
+     * @param searchRow
+     * @param searchColumn
+     * @return
+     */
     private String getLabelText(GridPane gridPane, int searchRow, int searchColumn) {
         Label label = getLabel(gridPane, searchRow, searchColumn);
         if (label != null)
@@ -175,6 +235,13 @@ public class MainHelper  {
         return null;
     }
 
+    /**
+     *
+     * @param gridPane
+     * @param searchRow
+     * @param searchColumn
+     * @param styleclass
+     */
     private void setLabelStyleClass(GridPane gridPane, int searchRow, int searchColumn, String styleclass) {
         Label label = getLabel(gridPane, searchRow, searchColumn);
         if (label != null) {
@@ -182,6 +249,12 @@ public class MainHelper  {
         }
     }
 
+    /**
+     *
+     * @param gridPane
+     * @param searchRow
+     * @param searchColumn
+     */
     private void clearLabelStyleClass(GridPane gridPane, int searchRow, int searchColumn) {
         Label label = getLabel(gridPane, searchRow, searchColumn);
         if (label != null) {
@@ -212,6 +285,12 @@ public class MainHelper  {
 
         contributors: Abir Islam
     */
+
+    /**
+     *
+     * @param gridPane
+     * @param searchRow
+     */
     public void updateRowColors(GridPane gridPane, int searchRow) {
         // Using HashMaps to resolve bugs
         HashMap <String, Integer> checkDups = new HashMap<>();
@@ -313,6 +392,11 @@ public class MainHelper  {
         alert.show();
     }
 
+    /**
+     *
+     * @param label
+     * @param styleClass
+     */
     private void transit(Label label, String styleClass ){
         FadeTransition firstFadeTransition = new FadeTransition(Duration.millis(300), label);
         firstFadeTransition.setFromValue(1);
@@ -329,6 +413,13 @@ public class MainHelper  {
         new SequentialTransition(firstFadeTransition, secondFadeTransition).play();
     }
 
+    /**
+     *
+     * @param gridPane
+     * @param keyboardRow1
+     * @param keyboardRow2
+     * @param keyboardRow3
+     */
     protected void updateKeyboardColors(GridPane gridPane, GridPane keyboardRow1, GridPane keyboardRow2, GridPane keyboardRow3) {
         String currentWord = getWordFromCurrentRow(gridPane).toLowerCase();
         HashSet<String> checkDups = new HashSet<>();
@@ -366,6 +457,11 @@ public class MainHelper  {
         }
     }
 
+    /**
+     *
+     * @param gridPane
+     * @return
+     */
     protected String getWordFromCurrentRow(GridPane gridPane) {
         StringBuilder input = new StringBuilder();
         for (int j = 1; j <= MAX_COLUMN; j++)
@@ -373,6 +469,14 @@ public class MainHelper  {
         return input.toString();
     }
 
+    /**
+     *
+     * @param gridPane
+     * @param keyboardRow1
+     * @param keyboardRow2
+     * @param keyboardRow3
+     * @param keyEvent
+     */
     public void onKeyPressed(GridPane gridPane, GridPane keyboardRow1, GridPane keyboardRow2,
                              GridPane keyboardRow3, KeyEvent keyEvent) {
         if (keyEvent.getCode() == KeyCode.BACK_SPACE) {
@@ -385,6 +489,10 @@ public class MainHelper  {
         }
     }
 
+    /**
+     *
+     * @param gridPane
+     */
     private void onBackspacePressed(GridPane gridPane) {
         if ((CURRENT_COLUMN == MAX_COLUMN || CURRENT_COLUMN == 1)
                 && !Objects.equals(getLabelText(gridPane, CURRENT_ROW, CURRENT_COLUMN), "")) {
@@ -400,6 +508,11 @@ public class MainHelper  {
         }
     }
 
+    /**
+     *
+     * @param gridPane
+     * @param keyEvent
+     */
     private void onLetterPressed(GridPane gridPane, KeyEvent keyEvent) {
         // this is to make it so that when the user types a letter but the row is full
         // it doesn't change the last letter instead
@@ -424,6 +537,13 @@ public class MainHelper  {
         }
     }
 
+    /**
+     *
+     * @param gridPane
+     * @param keyboardRow1
+     * @param keyboardRow2
+     * @param keyboardRow3
+     */
     void onEnterPressed(GridPane gridPane, GridPane keyboardRow1, GridPane keyboardRow2,
                               GridPane keyboardRow3) {
         if (normal && (!allChars) && (!limitGuess)){
@@ -438,16 +558,32 @@ public class MainHelper  {
             
     }
 
+    /**
+     * Picks from a random string within winningWords to make the word to solve during the game of Wordle.
+     * Customizable using custom library feature
+     */
     public void getRandomWord() {
         winningWord = winningWords.get(new Random().nextInt(winningWords.size()));
         //winningWord = "debug";
         System.out.println("THIS IS FOR DEBUGGING PURPOSES: " + winningWord);
     }
 
+    /**
+     * checks both winningWords and dictionaryWords to see if guess is a valid word in the dictionary
+     * @param guess
+     * @return
+     */
     public boolean isValidGuess(String guess) {
         return binarySearch(winningWords, guess) || binarySearch(dictionaryWords, guess);
     }
 
+    /**
+     * Wordle game is reset, with all text cleared, called by restart()
+     * @param gridPane
+     * @param keyboardRow1
+     * @param keyboardRow2
+     * @param keyboardRow3
+     */
     public void resetGame(GridPane gridPane, GridPane keyboardRow1, GridPane keyboardRow2,
                           GridPane keyboardRow3) {
         getRandomWord();
@@ -486,6 +622,14 @@ public class MainHelper  {
         checkForReset = true;
     }
 
+    /**
+     * Resets stopwatch timer to 0, animates the reset button when pressed, and calls for resetGame
+     * @param restartIcon
+     * @param gridPane
+     * @param keyboardRow1
+     * @param keyboardRow2
+     * @param keyboardRow3
+     */
     public void restart(ImageView restartIcon, GridPane gridPane, GridPane keyboardRow1,
                         GridPane keyboardRow2, GridPane keyboardRow3) {
         RotateTransition rotateTransition = new RotateTransition(Duration.millis(500), restartIcon);
@@ -497,6 +641,12 @@ public class MainHelper  {
         stopwatch.pause();
     }
 
+    /**
+     * Checks if string is in specified list using binary search
+     * @param list
+     * @param string
+     * @return
+     */
     private boolean binarySearch(ArrayList<String> list, String string) {
         int low = 0, high = list.size() - 1;
         while (low <= high) {
@@ -509,6 +659,12 @@ public class MainHelper  {
         return false;
     }
 
+    /**
+     *
+     * @param array
+     * @param letter
+     * @return
+     */
     private boolean contains(String[] array, String letter) {
         for (String string : array)
             if (string.equalsIgnoreCase(letter))
@@ -527,6 +683,12 @@ public class MainHelper  {
 
         contributors: Abir, Ato, Kevin, Marcie
     */
+
+    /**
+     *
+     * @param extraHBox
+     * @param stopwatchIcon
+     */
     public void toggleTimeTrial(HBox extraHBox, ImageView stopwatchIcon) {
         if(timeTrialEnabled) {
             extraHBox.setVisible(false);
@@ -551,6 +713,10 @@ public class MainHelper  {
 
         contributors: Ato
     */
+
+    /**
+     *
+     */
     public void showCustomDict()  {
         try{
             Stage stage = new Stage();
@@ -566,6 +732,11 @@ public class MainHelper  {
             e.printStackTrace();
         }
     }
+
+    /**
+     *
+     * @param nameTextField
+     */
     public void handleCustomDictSubmit(TextField nameTextField){
         Scene scene = nameTextField.getScene();
         Stage stage = (Stage) scene.getWindow();
@@ -574,6 +745,11 @@ public class MainHelper  {
         changeDictionaryWords(nameTextField, file);
     }
 
+    /**
+     *
+     * @param nameTextField
+     * @param path
+     */
     private void changeDictionaryWords(TextField nameTextField, String path) {
         InputStream dictionary = getClass().getResourceAsStream(path);
 
@@ -617,6 +793,11 @@ public class MainHelper  {
 
         contributors: Marcie
     */
+
+    /**
+     *
+     * @param extraVBox
+     */
     public void toggleAllChars(VBox extraVBox) {
         if(allChars) {
             allChars= false;
@@ -635,6 +816,10 @@ public class MainHelper  {
         extraVBox.getChildren().remove(numAttempts);
     }
 
+    /**
+     *
+     * @param extraVBox
+     */
     public void toggleLimitedGuesses(VBox extraVBox) {
         if(limitGuess) {
             allChars= false;
@@ -655,6 +840,13 @@ public class MainHelper  {
         }
     }
 
+    /**
+     *
+     * @param gridPane
+     * @param keyboardRow1
+     * @param keyboardRow2
+     * @param keyboardRow3
+     */
     public void normalMode(GridPane gridPane, GridPane keyboardRow1, GridPane keyboardRow2,
                             GridPane keyboardRow3){
 
@@ -703,6 +895,13 @@ public class MainHelper  {
             }
     }
 
+    /**
+     *
+     * @param gridPane
+     * @param keyboardRow1
+     * @param keyboardRow2
+     * @param keyboardRow3
+     */
     public void allCharsMode(GridPane gridPane, GridPane keyboardRow1, GridPane keyboardRow2,
                             GridPane keyboardRow3){
 
@@ -752,6 +951,13 @@ public class MainHelper  {
             }
     }
 
+    /**
+     *
+     * @param gridPane
+     * @param keyboardRow1
+     * @param keyboardRow2
+     * @param keyboardRow3
+     */
     public void limitedGuessesMode(GridPane gridPane, GridPane keyboardRow1, GridPane keyboardRow2,
                             GridPane keyboardRow3){
 
@@ -823,6 +1029,11 @@ public class MainHelper  {
     }
 
     // TESTING
+
+    /**
+     *
+     * @param menuVBox
+     */
     public void showMenu(VBox menuVBox) {
         if(menuOpen) {
             menuVBox.setVisible(false);
