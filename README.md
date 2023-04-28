@@ -2,7 +2,7 @@
 A project created using JavaFX that recreates the popular game Wordle while adding fun new features to keep the game fresh.
  
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/61361340/228308751-1f108178-e1cd-4e14-aa67-4c8eb4cacae6.png" />
+  <img src="https://github.com/cis3296s23/modifiable-wordle/blob/84ec5b1fa0055078e4bb4baca86b0bca2f6756ca/images/img.png" />
 </p>
 
 # How to run
